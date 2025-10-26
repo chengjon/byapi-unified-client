@@ -1,0 +1,6512 @@
+[
+  {
+    "api_name": "股票列表",
+    "api_url": "http://api.biyingapi.com/hslt/list/biyinglicence",
+    "api_description": "获取基础的股票代码和名称，用于后续接口的参数传入。",
+    "update_frequency": "每日16:20",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "股票代码，如：000001",
+        "name": "股票代码",
+        "descp": "如：000001"
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "股票名称，如：平安银行",
+        "name": "股票名称",
+        "descp": "如：平安银行"
+      },
+      {
+        "field_name": "jys",
+        "data_type": "string",
+        "description": "交易所，\"sh\"表示上证，\"sz\"表示深证",
+        "name": "交易所",
+        "descp": "\"sh\"表示上证，\"sz\"表示深证"
+      }
+    ]
+  },
+  {
+    "api_name": "新股日历",
+    "api_url": "http://api.biyingapi.com/hslt/new/biyinglicence",
+    "api_description": "新股日历，按申购日期倒序。",
+    "update_frequency": "每日17:00",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "zqdm",
+        "data_type": "string",
+        "description": "股票代码",
+        "name": "股票代码",
+        "descp": ""
+      },
+      {
+        "field_name": "zqjc",
+        "data_type": "string",
+        "description": "股票简称",
+        "name": "股票简称",
+        "descp": ""
+      },
+      {
+        "field_name": "sgdm",
+        "data_type": "string",
+        "description": "申购代码",
+        "name": "申购代码",
+        "descp": ""
+      },
+      {
+        "field_name": "fxsl",
+        "data_type": "number",
+        "description": "发行总数（股）",
+        "name": "发行总数",
+        "descp": ""
+      },
+      {
+        "field_name": "swfxsl",
+        "data_type": "number",
+        "description": "网上发行（股）",
+        "name": "网上发行",
+        "descp": ""
+      },
+      {
+        "field_name": "sgsx",
+        "data_type": "number",
+        "description": "申购上限（股）",
+        "name": "申购上限",
+        "descp": ""
+      },
+      {
+        "field_name": "dgsz",
+        "data_type": "number",
+        "description": "顶格申购需配市值(元)",
+        "name": "顶格申购需配市值",
+        "descp": ""
+      },
+      {
+        "field_name": "sgrq",
+        "data_type": "string",
+        "description": "申购日期",
+        "name": "申购日期",
+        "descp": ""
+      },
+      {
+        "field_name": "fxjg",
+        "data_type": "number",
+        "description": "发行价格（元），null为“未知”",
+        "name": "发行价格",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "zxj",
+        "data_type": "number",
+        "description": "最新价（元），null为“未知”",
+        "name": "最新价",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "srspj",
+        "data_type": "number",
+        "description": "首日收盘价（元），null为“未知”",
+        "name": "首日收盘价",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "zqgbrq",
+        "data_type": "string",
+        "description": "中签号公布日，null为未知",
+        "name": "中签号公布日",
+        "descp": "null为未知"
+      },
+      {
+        "field_name": "zqjkrq",
+        "data_type": "string",
+        "description": "中签缴款日，null为未知",
+        "name": "中签缴款日",
+        "descp": "null为未知"
+      },
+      {
+        "field_name": "ssrq",
+        "data_type": "string",
+        "description": "上市日期，null为未知",
+        "name": "上市日期",
+        "descp": "null为未知"
+      },
+      {
+        "field_name": "syl",
+        "data_type": "number",
+        "description": "发行市盈率，null为“未知”",
+        "name": "发行市盈率",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "hysyl",
+        "data_type": "number",
+        "description": "行业市盈率",
+        "name": "行业市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "wszql",
+        "data_type": "number",
+        "description": "中签率（%），null为“未知”",
+        "name": "中签率",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "yzbsl",
+        "data_type": "number",
+        "description": "连续一字板数量，null为“未知”",
+        "name": "连续一字板数量",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "涨幅（%），null为“未知”",
+        "name": "涨幅",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "yqhl",
+        "data_type": "number",
+        "description": "每中一签获利（元），null为“未知”",
+        "name": "每中一签获利",
+        "descp": "null为“未知”"
+      },
+      {
+        "field_name": "zyyw",
+        "data_type": "string",
+        "description": "主营业务",
+        "name": "主营业务",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "指数、行业、概念树",
+    "api_url": "http://api.biyingapi.com/hszg/list/biyinglicence",
+    "api_description": "获取指数、行业、概念（包括基金，债券，美股，外汇，期货，黄金等的代码），其中isleaf为1（叶子节点）的记录的code（代码）可以作为下方接口的参数传入，从而得到某个指数、行业、概念下的相关股票。",
+    "update_frequency": "每周六03:05",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "code",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "type1",
+        "data_type": "number",
+        "description": "一级分类（0:A股,1:创业板,2:科创板,3:基金,4:香港股市,5:债券,6:美国股市,7:外汇,8:期货,9:黄金,10:英国股市）",
+        "name": "一级分类",
+        "descp": ""
+      },
+      {
+        "field_name": "type2",
+        "data_type": "number",
+        "description": "二级分类（0:A股-申万行业,1:A股-申万二级,2:A股-热门概念,3:A股-概念板块,4:A股-地域板块,5:A股-证监会行业,6:A股-分类,7:A股-指数成分,8:A股-风险警示,9:A股-大盘指数,10:A股-次新股,11:A股-沪港通,12:A股-深港通,13:基金-封闭式基金,14:基金-开放式基金,15:基金-货币型基金,16:基金-ETF基金净值,17:基金-ETF基金行情,18:基金-LOF基金行情,21:基金-科创板基金,22:香港股市-恒生行业,23:香港股市-全部港股,24:香港股市-热门港股,25:香港股市-蓝筹股,26:香港股市-红筹股,27:香港股市-国企股,28:香港股市-创业板,29:香港股市-指数,30:香港股市-A+H,31:香港股市-窝轮,32:香港股市-ADR,33:香港股市-沪港通,34:香港股市-深港通,35:香港股市-中华系列指数,36:债券-沪深债券,37:债券-深市债券,38:债券-沪市债券,39:债券-沪深可转债,40:美国股市-中国概念股,41:美国股市-科技类,42:美国股市-金融类,43:美国股市-制造零售类,44:美国股市-汽车能源类,45:美国股市-媒体类,46:美国股市-医药食品类,48:外汇-基本汇率,49:外汇-热门汇率,50:外汇-所有汇率,51:外汇-交叉盘汇率,52:外汇-美元相关汇率,53:外汇-人民币相关汇率,54:期货-全球期货,55:期货-中国金融期货交易所,56:期货-上海期货交易所,57:期货-大连商品交易所,58:期货-郑州商品交易所,59:黄金-黄金现货,60:黄金-黄金期货",
+        "name": "二级分类",
+        "descp": "0:A股-申万行业,1:A股-申万二级,2:A股-热门概念,3:A股-概念板块,4:A股-地域板块,5:A股-证监会行业,6:A股-分类,7:A股-指数成分,8:A股-风险警示,9:A股-大盘指数,10:A股-次新股,11:A股-沪港通,12:A股-深港通,13:基金-封闭式基金,14:基金-开放式基金,15:基金-货币型基金,16:基金-ETF基金净值,17:基金-ETF基金行情,18:基金-LOF基金行情,21:基金-科创板基金,22:香港股市-恒生行业,23:香港股市-全部港股,24:香港股市-热门港股,25:香港股市-蓝筹股,26:香港股市-红筹股,27:香港股市-国企股,28:香港股市-创业板,29:香港股市-指数,30:香港股市-A+H,31:香港股市-窝轮,32:香港股市-ADR,33:香港股市-沪港通,34:香港股市-深港通,35:香港股市-中华系列指数,36:债券-沪深债券,37:债券-深市债券,38:债券-沪市债券,39:债券-沪深可转债,40:美国股市-中国概念股,41:美国股市-科技类,42:美国股市-金融类,43:美国股市-制造零售类,44:美国股市-汽车能源类,45:美国股市-媒体类,46:美国股市-医药食品类,48:外汇-基本汇率,49:外汇-热门汇率,50:外汇-所有汇率,51:外汇-交叉盘汇率,52:外汇-美元相关汇率,53:外汇-人民币相关汇率,54:期货-全球期货,55:期货-中国金融期货交易所,56:期货-上海期货交易所,57:期货-大连商品交易所,58:期货-郑州商品交易所,59:黄金-黄金现货,60:黄金-黄金期货"
+      },
+      {
+        "field_name": "level",
+        "data_type": "number",
+        "description": "层级，从0开始，根节点为0，二级节点为1，以此类推",
+        "name": "层级",
+        "descp": "从0开始，根节点为0，二级节点为1，以此类推"
+      },
+      {
+        "field_name": "pcode",
+        "data_type": "string",
+        "description": "父节点代码",
+        "name": "父节点代码",
+        "descp": ""
+      },
+      {
+        "field_name": "pname",
+        "data_type": "string",
+        "description": "父节点名称",
+        "name": "父节点名称",
+        "descp": ""
+      },
+      {
+        "field_name": "isleaf",
+        "data_type": "number",
+        "description": "是否为叶子节点，0：否，1：是",
+        "name": "是否为叶子节点",
+        "descp": "0：否，1：是"
+      }
+    ]
+  },
+  {
+    "api_name": "根据指数、行业、概念找相关股票",
+    "api_url": "http://api.biyingapi.com/hszg/gg/sw_sysh/biyinglicence",
+    "api_description": "根据“指数、行业、概念树”接口得到的代码作为参数，得到相关的股票。",
+    "update_frequency": "每周六11:00",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码（根据接口参数可能是A股股票代码，也可能是其他指数、行业、概念的股票代码）",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称（根据接口参数可能是A股股票代码，也可能是其他指数、行业、概念的股票名称）",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "jys",
+        "data_type": "string",
+        "description": "交易所，\"sh\"表示上证，\"sz\"表示深证（如果返回的是A股的股票，那么有值，否则是null）",
+        "name": "交易所",
+        "descp": "\"sh\"表示上证，\"sz\"表示深证（如果返回的是A股的股票，那么有值，否则是null）"
+      }
+    ]
+  },
+  {
+    "api_name": "根据股票找相关指数、行业、概念",
+    "api_url": "http://api.biyingapi.com/hszg/zg/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码作为参数，得到相关的指数、行业、概念。",
+    "update_frequency": "每周六11:00",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "code",
+        "data_type": "string",
+        "description": "指数、行业、概念代码，如：sw2_650300",
+        "name": "指数、行业、概念代码",
+        "descp": "如：sw2_650300"
+      },
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "指数、行业、概念名称，如：沪深股市-申万二级-国防军工-地面兵装",
+        "name": "指数、行业、概念名称",
+        "descp": "如：沪深股市-申万二级-国防军工-地面兵装"
+      }
+    ]
+  },
+  {
+    "api_name": "涨停股池",
+    "api_url": "http://api.biyingapi.com/hslt/ztgc/2024-01-10/biyinglicence",
+    "api_description": "根据日期（格式yyyy-MM-dd，从2019-11-28开始到现在的每个交易日）作为参数，得到每天的涨停股票列表，根据封板时间升序。",
+    "update_frequency": "交易时间段每10分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "价格（元）",
+        "name": "价格",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "涨幅（%）",
+        "name": "涨幅",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zsz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "换手率（%）",
+        "name": "换手率",
+        "descp": ""
+      },
+      {
+        "field_name": "lbc",
+        "data_type": "number",
+        "description": "连板数",
+        "name": "连板数",
+        "descp": ""
+      },
+      {
+        "field_name": "fbt",
+        "data_type": "string",
+        "description": "首次封板时间（HH:mm:ss）",
+        "name": "首次封板时间",
+        "descp": ""
+      },
+      {
+        "field_name": "lbt",
+        "data_type": "string",
+        "description": "最后封板时间（HH:mm:ss）",
+        "name": "最后封板时间",
+        "descp": ""
+      },
+      {
+        "field_name": "zj",
+        "data_type": "number",
+        "description": "封板资金（元）",
+        "name": "封板资金",
+        "descp": ""
+      },
+      {
+        "field_name": "zbc",
+        "data_type": "number",
+        "description": "炸板次数",
+        "name": "炸板次数",
+        "descp": ""
+      },
+      {
+        "field_name": "tj",
+        "data_type": "string",
+        "description": "涨停统计（x天/y板）",
+        "name": "涨停统计",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "跌停股池",
+    "api_url": "http://api.biyingapi.com/hslt/dtgc/2024-01-10/biyinglicence",
+    "api_description": "根据日期（格式yyyy-MM-dd，从2019-11-28开始到现在的每个交易日）作为参数，得到每天的跌停股票列表，根据封单资金升序。",
+    "update_frequency": "交易时间段每10分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "价格（元）",
+        "name": "价格",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "跌幅（%）",
+        "name": "跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zsz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "pe",
+        "data_type": "number",
+        "description": "动态市盈率",
+        "name": "动态市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "换手率（%）",
+        "name": "换手率",
+        "descp": ""
+      },
+      {
+        "field_name": "lbc",
+        "data_type": "number",
+        "description": "连续跌停次数",
+        "name": "连续跌停次数",
+        "descp": ""
+      },
+      {
+        "field_name": "lbt",
+        "data_type": "string",
+        "description": "最后封板时间（HH:mm:ss）",
+        "name": "最后封板时间",
+        "descp": ""
+      },
+      {
+        "field_name": "zj",
+        "data_type": "number",
+        "description": "封单资金（元）",
+        "name": "封单资金",
+        "descp": ""
+      },
+      {
+        "field_name": "fba",
+        "data_type": "number",
+        "description": "板上成交额（元）",
+        "name": "板上成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zbc",
+        "data_type": "number",
+        "description": "开板次数",
+        "name": "开板次数",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "强势股池",
+    "api_url": "http://api.biyingapi.com/hslt/qsgc/2024-01-10/biyinglicence",
+    "api_description": "根据日期（格式yyyy-MM-dd，从2019-11-28开始到现在的每个交易日）作为参数，得到每天的强势股票列表，根据涨幅倒序。",
+    "update_frequency": "交易时间段每10分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "价格（元）",
+        "name": "价格",
+        "descp": ""
+      },
+      {
+        "field_name": "ztp",
+        "data_type": "number",
+        "description": "涨停价（元）",
+        "name": "涨停价",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "涨幅（%）",
+        "name": "涨幅",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zsz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zs",
+        "data_type": "number",
+        "description": "涨速（%）",
+        "name": "涨速",
+        "descp": ""
+      },
+      {
+        "field_name": "nh",
+        "data_type": "number",
+        "description": "是否新高（0：否，1：是）",
+        "name": "是否新高",
+        "descp": ""
+      },
+      {
+        "field_name": "lb",
+        "data_type": "number",
+        "description": "量比",
+        "name": "量比",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "换手率（%）",
+        "name": "换手率",
+        "descp": ""
+      },
+      {
+        "field_name": "tj",
+        "data_type": "string",
+        "description": "涨停统计（x天/y板）",
+        "name": "涨停统计",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "次新股池",
+    "api_url": "http://api.biyingapi.com/hslt/cxgc/2024-01-10/biyinglicence",
+    "api_description": "根据日期（格式yyyy-MM-dd，从2019-11-28开始到现在的每个交易日）作为参数，得到每天的次新股票列表，根据开板几日升序。",
+    "update_frequency": "交易时间段每10分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "价格（元）",
+        "name": "价格",
+        "descp": ""
+      },
+      {
+        "field_name": "ztp",
+        "data_type": "number",
+        "description": "涨停价（元，无涨停价为null）",
+        "name": "涨停价",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "涨跌幅（%）",
+        "name": "涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zsz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "nh",
+        "data_type": "number",
+        "description": "是否新高（0：否，1：是）",
+        "name": "是否新高",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "转手率（%）",
+        "name": "转手率",
+        "descp": ""
+      },
+      {
+        "field_name": "tj",
+        "data_type": "string",
+        "description": "涨停统计（x天/y板）",
+        "name": "涨停统计",
+        "descp": ""
+      },
+      {
+        "field_name": "kb",
+        "data_type": "number",
+        "description": "开板几日",
+        "name": "开板几日",
+        "descp": ""
+      },
+      {
+        "field_name": "od",
+        "data_type": "string",
+        "description": "开板日期（yyyyMMdd）",
+        "name": "开板日期",
+        "descp": ""
+      },
+      {
+        "field_name": "ipod",
+        "data_type": "string",
+        "description": "上市日期（yyyyMMdd）",
+        "name": "上市日期",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "炸板股池",
+    "api_url": "http://api.biyingapi.com/hslt/zbgc/2024-01-10/biyinglicence",
+    "api_description": "根据日期（格式yyyy-MM-dd，从2019-11-28开始到现在的每个交易日）作为参数，得到每天的炸板股票列表，根据首次封板时间升序。",
+    "update_frequency": "交易时间段每10分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "代码",
+        "name": "代码",
+        "descp": ""
+      },
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "名称",
+        "name": "名称",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "价格（元）",
+        "name": "价格",
+        "descp": ""
+      },
+      {
+        "field_name": "ztp",
+        "data_type": "number",
+        "description": "涨停价（元）",
+        "name": "涨停价",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "涨跌幅（%）",
+        "name": "涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zsz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "zs",
+        "data_type": "number",
+        "description": "涨速（%）",
+        "name": "涨速",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "转手率（%）",
+        "name": "转手率",
+        "descp": ""
+      },
+      {
+        "field_name": "tj",
+        "data_type": "string",
+        "description": "涨停统计（x天/y板）",
+        "name": "涨停统计",
+        "descp": ""
+      },
+      {
+        "field_name": "fbt",
+        "data_type": "string",
+        "description": "首次封板时间（HH:mm:ss）",
+        "name": "首次封板时间",
+        "descp": ""
+      },
+      {
+        "field_name": "zbc",
+        "data_type": "number",
+        "description": "炸板次数",
+        "name": "炸板次数",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "公司简介",
+    "api_url": "http://api.biyingapi.com/hscp/gsjj/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的简介。包括公司基本信息，概念以及发行信息等。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "公司名称",
+        "name": "公司名称",
+        "descp": ""
+      },
+      {
+        "field_name": "ename",
+        "data_type": "string",
+        "description": "公司英文名称",
+        "name": "公司英文名称",
+        "descp": ""
+      },
+      {
+        "field_name": "market",
+        "data_type": "string",
+        "description": "上市市场",
+        "name": "上市市场",
+        "descp": ""
+      },
+      {
+        "field_name": "idea",
+        "data_type": "string",
+        "description": "概念及板块，多个概念由英文逗号分隔",
+        "name": "概念及板块",
+        "descp": "多个概念由英文逗号分隔"
+      },
+      {
+        "field_name": "ldate",
+        "data_type": "string",
+        "description": "上市日期，格式yyyy-MM-dd",
+        "name": "上市日期",
+        "descp": "格式yyyy-MM-dd"
+      },
+      {
+        "field_name": "sprice",
+        "data_type": "string",
+        "description": "发行价格（元）",
+        "name": "发行价格",
+        "descp": ""
+      },
+      {
+        "field_name": "principal",
+        "data_type": "string",
+        "description": "主承销商",
+        "name": "主承销商",
+        "descp": ""
+      },
+      {
+        "field_name": "rdate",
+        "data_type": "string",
+        "description": "成立日期",
+        "name": "成立日期",
+        "descp": ""
+      },
+      {
+        "field_name": "rprice",
+        "data_type": "string",
+        "description": "注册资本",
+        "name": "注册资本",
+        "descp": ""
+      },
+      {
+        "field_name": "instype",
+        "data_type": "string",
+        "description": "机构类型",
+        "name": "机构类型",
+        "descp": ""
+      },
+      {
+        "field_name": "organ",
+        "data_type": "string",
+        "description": "组织形式",
+        "name": "组织形式",
+        "descp": ""
+      },
+      {
+        "field_name": "secre",
+        "data_type": "string",
+        "description": "董事会秘书",
+        "name": "董事会秘书",
+        "descp": ""
+      },
+      {
+        "field_name": "phone",
+        "data_type": "string",
+        "description": "公司电话",
+        "name": "公司电话",
+        "descp": ""
+      },
+      {
+        "field_name": "sphone",
+        "data_type": "string",
+        "description": "董秘电话",
+        "name": "董秘电话",
+        "descp": ""
+      },
+      {
+        "field_name": "fax",
+        "data_type": "string",
+        "description": "公司传真",
+        "name": "公司传真",
+        "descp": ""
+      },
+      {
+        "field_name": "sfax",
+        "data_type": "string",
+        "description": "董秘传真",
+        "name": "董秘传真",
+        "descp": ""
+      },
+      {
+        "field_name": "email",
+        "data_type": "string",
+        "description": "公司电子邮箱",
+        "name": "公司电子邮箱",
+        "descp": ""
+      },
+      {
+        "field_name": "semail",
+        "data_type": "string",
+        "description": "董秘电子邮箱",
+        "name": "董秘电子邮箱",
+        "descp": ""
+      },
+      {
+        "field_name": "site",
+        "data_type": "string",
+        "description": "公司网站",
+        "name": "公司网站",
+        "descp": ""
+      },
+      {
+        "field_name": "post",
+        "data_type": "string",
+        "description": "邮政编码",
+        "name": "邮政编码",
+        "descp": ""
+      },
+      {
+        "field_name": "infosite",
+        "data_type": "string",
+        "description": "信息披露网址",
+        "name": "信息披露网址",
+        "descp": ""
+      },
+      {
+        "field_name": "oname",
+        "data_type": "string",
+        "description": "证券简称更名历史",
+        "name": "证券简称更名历史",
+        "descp": ""
+      },
+      {
+        "field_name": "addr",
+        "data_type": "string",
+        "description": "注册地址",
+        "name": "注册地址",
+        "descp": ""
+      },
+      {
+        "field_name": "oaddr",
+        "data_type": "string",
+        "description": "办公地址",
+        "name": "办公地址",
+        "descp": ""
+      },
+      {
+        "field_name": "desc",
+        "data_type": "string",
+        "description": "公司简介",
+        "name": "公司简介",
+        "descp": ""
+      },
+      {
+        "field_name": "bscope",
+        "data_type": "string",
+        "description": "经营范围",
+        "name": "经营范围",
+        "descp": ""
+      },
+      {
+        "field_name": "printype",
+        "data_type": "string",
+        "description": "承销方式",
+        "name": "承销方式",
+        "descp": ""
+      },
+      {
+        "field_name": "referrer",
+        "data_type": "string",
+        "description": "上市推荐人",
+        "name": "上市推荐人",
+        "descp": ""
+      },
+      {
+        "field_name": "putype",
+        "data_type": "string",
+        "description": "发行方式",
+        "name": "发行方式",
+        "descp": ""
+      },
+      {
+        "field_name": "pe",
+        "data_type": "string",
+        "description": "发行市盈率（按发行后总股本）",
+        "name": "发行市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "firgu",
+        "data_type": "string",
+        "description": "首发前总股本（万股）",
+        "name": "首发前总股本",
+        "descp": ""
+      },
+      {
+        "field_name": "lastgu",
+        "data_type": "string",
+        "description": "首发后总股本（万股）",
+        "name": "首发后总股本",
+        "descp": ""
+      },
+      {
+        "field_name": "realgu",
+        "data_type": "string",
+        "description": "实际发行量（万股）",
+        "name": "实际发行量",
+        "descp": ""
+      },
+      {
+        "field_name": "planm",
+        "data_type": "string",
+        "description": "预计募集资金（万元）",
+        "name": "预计募集资金",
+        "descp": ""
+      },
+      {
+        "field_name": "realm",
+        "data_type": "string",
+        "description": "实际募集资金合计（万元）",
+        "name": "实际募集资金合计",
+        "descp": ""
+      },
+      {
+        "field_name": "pubfee",
+        "data_type": "string",
+        "description": "发行费用总额（万元）",
+        "name": "发行费用总额",
+        "descp": ""
+      },
+      {
+        "field_name": "collect",
+        "data_type": "string",
+        "description": "募集资金净额（万元）",
+        "name": "募集资金净额",
+        "descp": ""
+      },
+      {
+        "field_name": "signfee",
+        "data_type": "string",
+        "description": "承销费用（万元）",
+        "name": "承销费用",
+        "descp": ""
+      },
+      {
+        "field_name": "pdate",
+        "data_type": "string",
+        "description": "招股公告日",
+        "name": "招股公告日",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "所属指数",
+    "api_url": "http://api.biyingapi.com/hscp/sszs/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的所属指数。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "mc",
+        "data_type": "string",
+        "description": "指数名称",
+        "name": "指数名称",
+        "descp": ""
+      },
+      {
+        "field_name": "dm",
+        "data_type": "string",
+        "description": "指数代码",
+        "name": "指数代码",
+        "descp": ""
+      },
+      {
+        "field_name": "ind",
+        "data_type": "string",
+        "description": "进入日期yyyy-MM-dd",
+        "name": "进入日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "outd",
+        "data_type": "string",
+        "description": "退出日期yyyy-MM-dd",
+        "name": "退出日期yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "历届高管成员",
+    "api_url": "http://api.biyingapi.com/hscp/ljgg/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的历届高管成员名单。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "姓名",
+        "name": "姓名",
+        "descp": ""
+      },
+      {
+        "field_name": "title",
+        "data_type": "string",
+        "description": "职务",
+        "name": "职务",
+        "descp": ""
+      },
+      {
+        "field_name": "sdate",
+        "data_type": "string",
+        "description": "起始日期yyyy-MM-dd",
+        "name": "起始日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "edate",
+        "data_type": "string",
+        "description": "终止日期yyyy-MM-dd",
+        "name": "终止日期yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "历届董事会成员",
+    "api_url": "http://api.biyingapi.com/hscp/ljds/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的历届董事会成员名单。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "姓名",
+        "name": "姓名",
+        "descp": ""
+      },
+      {
+        "field_name": "title",
+        "data_type": "string",
+        "description": "职务",
+        "name": "职务",
+        "descp": ""
+      },
+      {
+        "field_name": "sdate",
+        "data_type": "string",
+        "description": "起始日期yyyy-MM-dd",
+        "name": "起始日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "edate",
+        "data_type": "string",
+        "description": "终止日期yyyy-MM-dd",
+        "name": "终止日期yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "历届监事会成员",
+    "api_url": "http://api.biyingapi.com/hscp/ljjj/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的历届监事会成员名单。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "姓名",
+        "name": "姓名",
+        "descp": ""
+      },
+      {
+        "field_name": "title",
+        "data_type": "string",
+        "description": "职务",
+        "name": "职务",
+        "descp": ""
+      },
+      {
+        "field_name": "sdate",
+        "data_type": "string",
+        "description": "起始日期yyyy-MM-dd",
+        "name": "起始日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "edate",
+        "data_type": "string",
+        "description": "终止日期yyyy-MM-dd",
+        "name": "终止日期yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "近年分红",
+    "api_url": "http://api.biyingapi.com/hscp/jnfh/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的近年来的分红实施结果。按公告日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "sdate",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "give",
+        "data_type": "string",
+        "description": "每10股送股(单位：股)",
+        "name": "每10股送股",
+        "descp": ""
+      },
+      {
+        "field_name": "change",
+        "data_type": "string",
+        "description": "每10股转增(单位：股)",
+        "name": "每10股转增",
+        "descp": ""
+      },
+      {
+        "field_name": "send",
+        "data_type": "string",
+        "description": "每10股派息(税前，单位：元)",
+        "name": "每10股派息",
+        "descp": ""
+      },
+      {
+        "field_name": "line",
+        "data_type": "string",
+        "description": "进度",
+        "name": "进度",
+        "descp": ""
+      },
+      {
+        "field_name": "cdate",
+        "data_type": "string",
+        "description": "除权除息日yyyy-MM-dd",
+        "name": "除权除息日yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "edate",
+        "data_type": "string",
+        "description": "股权登记日yyyy-MM-dd",
+        "name": "股权登记日yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "hdate",
+        "data_type": "string",
+        "description": "红股上市日yyyy-MM-dd",
+        "name": "红股上市日yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "近年增发",
+    "api_url": "http://api.biyingapi.com/hscp/jnzf/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的近年来的增发情况。按公告日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "sdate",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "type",
+        "data_type": "string",
+        "description": "发行方式",
+        "name": "发行方式",
+        "descp": ""
+      },
+      {
+        "field_name": "price",
+        "data_type": "string",
+        "description": "发行价格",
+        "name": "发行价格",
+        "descp": ""
+      },
+      {
+        "field_name": "tprice",
+        "data_type": "string",
+        "description": "实际公司募集资金总额",
+        "name": "实际公司募集资金总额",
+        "descp": ""
+      },
+      {
+        "field_name": "fprice",
+        "data_type": "string",
+        "description": "发行费用总额",
+        "name": "发行费用总额",
+        "descp": ""
+      },
+      {
+        "field_name": "amount",
+        "data_type": "string",
+        "description": "实际发行数量",
+        "name": "实际发行数量",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "解禁限售",
+    "api_url": "http://api.biyingapi.com/hscp/jjxs/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的解禁限售情况。按解禁日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "rdate",
+        "data_type": "string",
+        "description": "解禁日期yyyy-MM-dd",
+        "name": "解禁日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "ramount",
+        "data_type": "number",
+        "description": "解禁数量(万股)",
+        "name": "解禁数量",
+        "descp": ""
+      },
+      {
+        "field_name": "rprice",
+        "data_type": "number",
+        "description": "解禁股流通市值(亿元)",
+        "name": "解禁股流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "batch",
+        "data_type": "number",
+        "description": "上市批次",
+        "name": "上市批次",
+        "descp": ""
+      },
+      {
+        "field_name": "pdate",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "近一年各季度利润",
+    "api_url": "http://api.biyingapi.com/hscp/jdlr/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司近一年各个季度的利润。按截止日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "date",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "income",
+        "data_type": "string",
+        "description": "营业收入（万元）",
+        "name": "营业收入",
+        "descp": ""
+      },
+      {
+        "field_name": "expend",
+        "data_type": "string",
+        "description": "营业支出（万元）",
+        "name": "营业支出",
+        "descp": ""
+      },
+      {
+        "field_name": "profit",
+        "data_type": "string",
+        "description": "营业利润（万元）",
+        "name": "营业利润",
+        "descp": ""
+      },
+      {
+        "field_name": "totalp",
+        "data_type": "string",
+        "description": "利润总额（万元）",
+        "name": "利润总额",
+        "descp": ""
+      },
+      {
+        "field_name": "reprofit",
+        "data_type": "string",
+        "description": "净利润（万元）",
+        "name": "净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "basege",
+        "data_type": "string",
+        "description": "基本每股收益(元/股)",
+        "name": "基本每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "ettege",
+        "data_type": "string",
+        "description": "稀释每股收益(元/股)",
+        "name": "稀释每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "otherp",
+        "data_type": "string",
+        "description": "其他综合收益（万元）",
+        "name": "其他综合收益",
+        "descp": ""
+      },
+      {
+        "field_name": "totalcp",
+        "data_type": "string",
+        "description": "综合收益总额（万元）",
+        "name": "综合收益总额",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "近一年各季度现金流",
+    "api_url": "http://api.biyingapi.com/hscp/jdxj/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司近一年各个季度的现金流。按截止日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "date",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "jyin",
+        "data_type": "string",
+        "description": "经营活动现金流入小计（万元）",
+        "name": "经营活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "jyout",
+        "data_type": "string",
+        "description": "经营活动现金流出小计（万元）",
+        "name": "经营活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "jyfinal",
+        "data_type": "string",
+        "description": "经营活动产生的现金流量净额（万元）",
+        "name": "经营活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "tzin",
+        "data_type": "string",
+        "description": "投资活动现金流入小计（万元）",
+        "name": "投资活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "tzout",
+        "data_type": "string",
+        "description": "投资活动现金流出小计（万元）",
+        "name": "投资活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "tzfinal",
+        "data_type": "string",
+        "description": "投资活动产生的现金流量净额（万元）",
+        "name": "投资活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "czin",
+        "data_type": "string",
+        "description": "筹资活动现金流入小计（万元）",
+        "name": "筹资活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "czout",
+        "data_type": "string",
+        "description": "筹资活动现金流出小计（万元）",
+        "name": "筹资活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "czfinal",
+        "data_type": "string",
+        "description": "筹资活动产生的现金流量净额（万元）",
+        "name": "筹资活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "hl",
+        "data_type": "string",
+        "description": "汇率变动对现金及现金等价物的影响（万元）",
+        "name": "汇率变动对现金及现金等价物的影响",
+        "descp": ""
+      },
+      {
+        "field_name": "cashinc",
+        "data_type": "string",
+        "description": "现金及现金等价物净增加额（万元）",
+        "name": "现金及现金等价物净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "cashs",
+        "data_type": "string",
+        "description": "期初现金及现金等价物余额（万元）",
+        "name": "期初现金及现金等价物余额",
+        "descp": ""
+      },
+      {
+        "field_name": "cashe",
+        "data_type": "string",
+        "description": "期末现金及现金等价物余额（万元）",
+        "name": "期末现金及现金等价物余额",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "近年业绩预告",
+    "api_url": "http://api.biyingapi.com/hscp/yjyg/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司近年来的业绩预告。按公告日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "pdate",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "rdate",
+        "data_type": "string",
+        "description": "报告期yyyy-MM-dd",
+        "name": "报告期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "type",
+        "data_type": "string",
+        "description": "类型",
+        "name": "类型",
+        "descp": ""
+      },
+      {
+        "field_name": "abs",
+        "data_type": "string",
+        "description": "业绩预告摘要",
+        "name": "业绩预告摘要",
+        "descp": ""
+      },
+      {
+        "field_name": "old",
+        "data_type": "string",
+        "description": "上年同期每股收益(元)",
+        "name": "上年同期每股收益",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "财务指标",
+    "api_url": "http://api.biyingapi.com/hscp/cwzb/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司近四个季度的主要财务指标。按报告日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "date",
+        "data_type": "string",
+        "description": "报告日期yyyy-MM-dd",
+        "name": "报告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "tbmg",
+        "data_type": "string",
+        "description": "摊薄每股收益(元)d",
+        "name": "摊薄每股收益",
+        "descp": "d"
+      },
+      {
+        "field_name": "jqmg",
+        "data_type": "string",
+        "description": "加权每股收益(元)型",
+        "name": "加权每股收益",
+        "descp": "型"
+      },
+      {
+        "field_name": "mgsy",
+        "data_type": "string",
+        "description": "每股收益_调整后(元)",
+        "name": "每股收益_调整后",
+        "descp": ""
+      },
+      {
+        "field_name": "kfmg",
+        "data_type": "string",
+        "description": "扣除非经常性损益后的每股收益(元)",
+        "name": "扣除非经常性损益后的每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "mgjz",
+        "data_type": "string",
+        "description": "每股净资产_调整前(元)",
+        "name": "每股净资产_调整前",
+        "descp": ""
+      },
+      {
+        "field_name": "mgjzad",
+        "data_type": "string",
+        "description": "每股净资产_调整后(元)",
+        "name": "每股净资产_调整后",
+        "descp": ""
+      },
+      {
+        "field_name": "mgjy",
+        "data_type": "string",
+        "description": "每股经营性现金流(元)",
+        "name": "每股经营性现金流",
+        "descp": ""
+      },
+      {
+        "field_name": "mggjj",
+        "data_type": "string",
+        "description": "每股资本公积金(元)",
+        "name": "每股资本公积金",
+        "descp": ""
+      },
+      {
+        "field_name": "mgwly",
+        "data_type": "string",
+        "description": "每股未分配利润(元)",
+        "name": "每股未分配利润",
+        "descp": ""
+      },
+      {
+        "field_name": "zclr",
+        "data_type": "string",
+        "description": "总资产利润率(%)",
+        "name": "总资产利润率",
+        "descp": ""
+      },
+      {
+        "field_name": "zylr",
+        "data_type": "string",
+        "description": "主营业务利润率(%)",
+        "name": "主营业务利润率",
+        "descp": ""
+      },
+      {
+        "field_name": "zzlr",
+        "data_type": "string",
+        "description": "总资产净利润率(%)",
+        "name": "总资产净利润率",
+        "descp": ""
+      },
+      {
+        "field_name": "cblr",
+        "data_type": "string",
+        "description": "成本费用利润率(%)",
+        "name": "成本费用利润率",
+        "descp": ""
+      },
+      {
+        "field_name": "yylr",
+        "data_type": "string",
+        "description": "营业利润率(%)",
+        "name": "营业利润率",
+        "descp": ""
+      },
+      {
+        "field_name": "zycb",
+        "data_type": "string",
+        "description": "主营业务成本率(%)",
+        "name": "主营业务成本率",
+        "descp": ""
+      },
+      {
+        "field_name": "xsjl",
+        "data_type": "string",
+        "description": "销售净利率(%)",
+        "name": "销售净利率",
+        "descp": ""
+      },
+      {
+        "field_name": "gbbc",
+        "data_type": "string",
+        "description": "股本报酬率(%)",
+        "name": "股本报酬率",
+        "descp": ""
+      },
+      {
+        "field_name": "jzbc",
+        "data_type": "string",
+        "description": "净资产报酬率(%)",
+        "name": "净资产报酬率",
+        "descp": ""
+      },
+      {
+        "field_name": "zcbc",
+        "data_type": "string",
+        "description": "资产报酬率(%)",
+        "name": "资产报酬率",
+        "descp": ""
+      },
+      {
+        "field_name": "xsml",
+        "data_type": "string",
+        "description": "销售毛利率(%)",
+        "name": "销售毛利率",
+        "descp": ""
+      },
+      {
+        "field_name": "xxbz",
+        "data_type": "string",
+        "description": "三项费用比重",
+        "name": "三项费用比重",
+        "descp": ""
+      },
+      {
+        "field_name": "fzy",
+        "data_type": "string",
+        "description": "非主营比重",
+        "name": "非主营比重",
+        "descp": ""
+      },
+      {
+        "field_name": "zybz",
+        "data_type": "string",
+        "description": "主营利润比重",
+        "name": "主营利润比重",
+        "descp": ""
+      },
+      {
+        "field_name": "gxff",
+        "data_type": "string",
+        "description": "股息发放率(%)",
+        "name": "股息发放率",
+        "descp": ""
+      },
+      {
+        "field_name": "tzsy",
+        "data_type": "string",
+        "description": "投资收益率(%)",
+        "name": "投资收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "zyyw",
+        "data_type": "string",
+        "description": "主营业务利润(元)",
+        "name": "主营业务利润",
+        "descp": ""
+      },
+      {
+        "field_name": "jzsy",
+        "data_type": "string",
+        "description": "净资产收益率(%)",
+        "name": "净资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "jqjz",
+        "data_type": "string",
+        "description": "加权净资产收益率(%)",
+        "name": "加权净资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "kflr",
+        "data_type": "string",
+        "description": "扣除非经常性损益后的净利润(元)",
+        "name": "扣除非经常性损益后的净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "zysr",
+        "data_type": "string",
+        "description": "主营业务收入增长率(%)",
+        "name": "主营业务收入增长率",
+        "descp": ""
+      },
+      {
+        "field_name": "jlzz",
+        "data_type": "string",
+        "description": "净利润增长率(%)",
+        "name": "净利润增长率",
+        "descp": ""
+      },
+      {
+        "field_name": "jzzz",
+        "data_type": "string",
+        "description": "净资产增长率(%)",
+        "name": "净资产增长率",
+        "descp": ""
+      },
+      {
+        "field_name": "zzzz",
+        "data_type": "string",
+        "description": "总资产增长率(%)",
+        "name": "总资产增长率",
+        "descp": ""
+      },
+      {
+        "field_name": "yszz",
+        "data_type": "string",
+        "description": "应收账款周转率(次)",
+        "name": "应收账款周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "yszzt",
+        "data_type": "string",
+        "description": "应收账款周转天数(天)",
+        "name": "应收账款周转天数",
+        "descp": ""
+      },
+      {
+        "field_name": "chzz",
+        "data_type": "string",
+        "description": "存货周转天数(天)",
+        "name": "存货周转天数",
+        "descp": ""
+      },
+      {
+        "field_name": "chzzl",
+        "data_type": "string",
+        "description": "存货周转率(次)",
+        "name": "存货周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "gzzz",
+        "data_type": "string",
+        "description": "固定资产周转率(次)",
+        "name": "固定资产周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "zzzzl",
+        "data_type": "string",
+        "description": "总资产周转率(次)",
+        "name": "总资产周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "zzzzt",
+        "data_type": "string",
+        "description": "总资产周转天数(天)",
+        "name": "总资产周转天数",
+        "descp": ""
+      },
+      {
+        "field_name": "ldzz",
+        "data_type": "string",
+        "description": "流动资产周转率(次)",
+        "name": "流动资产周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "ldzzt",
+        "data_type": "string",
+        "description": "流动资产周转天数(天)",
+        "name": "流动资产周转天数",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzz",
+        "data_type": "string",
+        "description": "股东权益周转率(次)",
+        "name": "股东权益周转率",
+        "descp": ""
+      },
+      {
+        "field_name": "ldbl",
+        "data_type": "string",
+        "description": "流动比率",
+        "name": "流动比率",
+        "descp": ""
+      },
+      {
+        "field_name": "sdbl",
+        "data_type": "string",
+        "description": "速动比率",
+        "name": "速动比率",
+        "descp": ""
+      },
+      {
+        "field_name": "xjbl",
+        "data_type": "string",
+        "description": "现金比率(%)",
+        "name": "现金比率",
+        "descp": ""
+      },
+      {
+        "field_name": "lxzf",
+        "data_type": "string",
+        "description": "利息支付倍数",
+        "name": "利息支付倍数",
+        "descp": ""
+      },
+      {
+        "field_name": "zjbl",
+        "data_type": "string",
+        "description": "长期债务与营运资金比率(%)",
+        "name": "长期债务与营运资金比率",
+        "descp": ""
+      },
+      {
+        "field_name": "gdqy",
+        "data_type": "string",
+        "description": "股东权益比率(%)",
+        "name": "股东权益比率",
+        "descp": ""
+      },
+      {
+        "field_name": "cqfz",
+        "data_type": "string",
+        "description": "长期负债比率(%)",
+        "name": "长期负债比率",
+        "descp": ""
+      },
+      {
+        "field_name": "gdgd",
+        "data_type": "string",
+        "description": "股东权益与固定资产比率(%)",
+        "name": "股东权益与固定资产比率",
+        "descp": ""
+      },
+      {
+        "field_name": "fzqy",
+        "data_type": "string",
+        "description": "负债与所有者权益比率(%)",
+        "name": "负债与所有者权益比率",
+        "descp": ""
+      },
+      {
+        "field_name": "zczjbl",
+        "data_type": "string",
+        "description": "长期资产与长期资金比率(%)",
+        "name": "长期资产与长期资金比率",
+        "descp": ""
+      },
+      {
+        "field_name": "zblv",
+        "data_type": "string",
+        "description": "资本化比率(%)",
+        "name": "资本化比率",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcjz",
+        "data_type": "string",
+        "description": "固定资产净值率(%)",
+        "name": "固定资产净值率",
+        "descp": ""
+      },
+      {
+        "field_name": "zbgdh",
+        "data_type": "string",
+        "description": "资本固定化比率(%)",
+        "name": "资本固定化比率",
+        "descp": ""
+      },
+      {
+        "field_name": "cqbl",
+        "data_type": "string",
+        "description": "产权比率(%)",
+        "name": "产权比率",
+        "descp": ""
+      },
+      {
+        "field_name": "qxjzb",
+        "data_type": "string",
+        "description": "清算价值比率(%)",
+        "name": "清算价值比率",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcbz",
+        "data_type": "string",
+        "description": "固定资产比重(%)",
+        "name": "固定资产比重",
+        "descp": ""
+      },
+      {
+        "field_name": "zcfzl",
+        "data_type": "string",
+        "description": "资产负债率(%)",
+        "name": "资产负债率",
+        "descp": ""
+      },
+      {
+        "field_name": "zzc",
+        "data_type": "string",
+        "description": "总资产(元)",
+        "name": "总资产",
+        "descp": ""
+      },
+      {
+        "field_name": "jyxj",
+        "data_type": "string",
+        "description": "经营现金净流量对销售收入比率(%)",
+        "name": "经营现金净流量对销售收入比率",
+        "descp": ""
+      },
+      {
+        "field_name": "zcjyxj",
+        "data_type": "string",
+        "description": "资产的经营现金流量回报率(%)",
+        "name": "资产的经营现金流量回报率",
+        "descp": ""
+      },
+      {
+        "field_name": "jylrb",
+        "data_type": "string",
+        "description": "经营现金净流量与净利润的比率(%)",
+        "name": "经营现金净流量与净利润的比率",
+        "descp": ""
+      },
+      {
+        "field_name": "jyfzl",
+        "data_type": "string",
+        "description": "经营现金净流量对负债比率(%)",
+        "name": "经营现金净流量对负债比率",
+        "descp": ""
+      },
+      {
+        "field_name": "xjlbl",
+        "data_type": "string",
+        "description": "现金流量比率(%)",
+        "name": "现金流量比率",
+        "descp": ""
+      },
+      {
+        "field_name": "dqgptz",
+        "data_type": "string",
+        "description": "短期股票投资(元)",
+        "name": "短期股票投资",
+        "descp": ""
+      },
+      {
+        "field_name": "dqzctz",
+        "data_type": "string",
+        "description": "短期债券投资(元)",
+        "name": "短期债券投资",
+        "descp": ""
+      },
+      {
+        "field_name": "dqjytz",
+        "data_type": "string",
+        "description": "短期其它经营性投资(元)",
+        "name": "短期其它经营性投资",
+        "descp": ""
+      },
+      {
+        "field_name": "qcgptz",
+        "data_type": "string",
+        "description": "长期股票投资(元)",
+        "name": "长期股票投资",
+        "descp": ""
+      },
+      {
+        "field_name": "cqzqtz",
+        "data_type": "string",
+        "description": "长期债券投资(元)",
+        "name": "长期债券投资",
+        "descp": ""
+      },
+      {
+        "field_name": "cqjyxtz",
+        "data_type": "string",
+        "description": "长期其它经营性投资(元)",
+        "name": "长期其它经营性投资",
+        "descp": ""
+      },
+      {
+        "field_name": "yszk1",
+        "data_type": "string",
+        "description": "1年以内应收帐款(元)",
+        "name": "1年以内应收帐款",
+        "descp": ""
+      },
+      {
+        "field_name": "yszk12",
+        "data_type": "string",
+        "description": "1-2年以内应收帐款(元)",
+        "name": "1-2年以内应收帐款",
+        "descp": ""
+      },
+      {
+        "field_name": "yszk23",
+        "data_type": "string",
+        "description": "2-3年以内应收帐款(元)",
+        "name": "2-3年以内应收帐款",
+        "descp": ""
+      },
+      {
+        "field_name": "yszk3",
+        "data_type": "string",
+        "description": "3年以内应收帐款(元)",
+        "name": "3年以内应收帐款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfhk1",
+        "data_type": "string",
+        "description": "1年以内预付货款(元)",
+        "name": "1年以内预付货款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfhk12",
+        "data_type": "string",
+        "description": "1-2年以内预付货款(元)",
+        "name": "1-2年以内预付货款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfhk23",
+        "data_type": "string",
+        "description": "2-3年以内预付货款(元)",
+        "name": "2-3年以内预付货款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfhk3",
+        "data_type": "string",
+        "description": "3年以内预付货款(元)",
+        "name": "3年以内预付货款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysk1",
+        "data_type": "string",
+        "description": "1年以内其它应收款(元)",
+        "name": "1年以内其它应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysk12",
+        "data_type": "string",
+        "description": "1-2年以内其它应收款(元)",
+        "name": "1-2年以内其它应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysk23",
+        "data_type": "string",
+        "description": "2-3年以内其它应收款(元)",
+        "name": "2-3年以内其它应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysk3",
+        "data_type": "string",
+        "description": "3年以内其它应收款(元)",
+        "name": "3年以内其它应收款",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "十大股东",
+    "api_url": "http://api.biyingapi.com/hscp/sdgd/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的十大股东数据。按截止日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "ggrq",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "gdsm",
+        "data_type": "string",
+        "description": "股东说明",
+        "name": "股东说明",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzs",
+        "data_type": "number",
+        "description": "股东总数",
+        "name": "股东总数",
+        "descp": ""
+      },
+      {
+        "field_name": "pjcg",
+        "data_type": "number",
+        "description": "平均持股(单位：股，按总股本计算)",
+        "name": "平均持股",
+        "descp": ""
+      },
+      {
+        "field_name": "sdgd",
+        "data_type": "array<ZygdSdgd>",
+        "description": "十大股东，其中ZygdSdgd对象见下方说明",
+        "name": "十大股东",
+        "descp": "其中ZygdSdgd对象见下方说明"
+      }
+    ]
+  },
+  {
+    "api_name": "十大流通股东",
+    "api_url": "http://api.biyingapi.com/hscp/ltgd/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的十大流通股东数据。按公告日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "ggrq",
+        "data_type": "string",
+        "description": "公告日期yyyy-MM-dd",
+        "name": "公告日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "sdgd",
+        "data_type": "array<ZygdSdgd>",
+        "description": "十大流通股东，其中ZygdSdgd对象见下方说明",
+        "name": "十大流通股东",
+        "descp": "其中ZygdSdgd对象见下方说明"
+      }
+    ]
+  },
+  {
+    "api_name": "股东变化趋势",
+    "api_url": "http://api.biyingapi.com/hscp/gdbh/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取上市公司的股东变化趋势数据。按截止日期倒序。",
+    "update_frequency": "每日03:30",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "gdhs",
+        "data_type": "string",
+        "description": "股东户数",
+        "name": "股东户数",
+        "descp": ""
+      },
+      {
+        "field_name": "bh",
+        "data_type": "string",
+        "description": "比上期变化情况",
+        "name": "比上期变化情况",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "基金持股",
+    "api_url": "http://api.biyingapi.com/hscp/jjcg/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取该股票最近500家左右的基金持股情况。按截止日期倒序。",
+    "update_frequency": "每周六18:00",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期yyyy-MM-dd",
+        "name": "截止日期yyyy-MM-dd",
+        "descp": ""
+      },
+      {
+        "field_name": "jjmc",
+        "data_type": "string",
+        "description": "基金名称",
+        "name": "基金名称",
+        "descp": ""
+      },
+      {
+        "field_name": "jjdm",
+        "data_type": "string",
+        "description": "基金代码",
+        "name": "基金代码",
+        "descp": ""
+      },
+      {
+        "field_name": "ccsl",
+        "data_type": "number",
+        "description": "持仓数量(股)",
+        "name": "持仓数量",
+        "descp": ""
+      },
+      {
+        "field_name": "ltbl",
+        "data_type": "number",
+        "description": "占流通股比例(%)",
+        "name": "占流通股比例",
+        "descp": ""
+      },
+      {
+        "field_name": "cgsz",
+        "data_type": "number",
+        "description": "持股市值（元）",
+        "name": "持股市值",
+        "descp": ""
+      },
+      {
+        "field_name": "jzbl",
+        "data_type": "number",
+        "description": "占净值比例（%）",
+        "name": "占净值比例",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "实时交易(公开数据)",
+    "api_url": "http://api.biyingapi.com/hsrl/ssjy/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取实时交易数据（您可以理解为日线的最新数据）。",
+    "update_frequency": "交易时间段每1分钟",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "fm",
+        "data_type": "number",
+        "description": "五分钟涨跌幅（%）",
+        "name": "五分钟涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "number",
+        "description": "最高价（元）",
+        "name": "最高价",
+        "descp": ""
+      },
+      {
+        "field_name": "hs",
+        "data_type": "number",
+        "description": "换手（%）",
+        "name": "换手",
+        "descp": ""
+      },
+      {
+        "field_name": "lb",
+        "data_type": "number",
+        "description": "量比（%）",
+        "name": "量比",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "number",
+        "description": "最低价（元）",
+        "name": "最低价",
+        "descp": ""
+      },
+      {
+        "field_name": "lt",
+        "data_type": "number",
+        "description": "流通市值（元）",
+        "name": "流通市值",
+        "descp": ""
+      },
+      {
+        "field_name": "o",
+        "data_type": "number",
+        "description": "开盘价（元）",
+        "name": "开盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "pe",
+        "data_type": "number",
+        "description": "市盈率（动态，总市值除以预估全年净利润，例如当前公布一季度净利润1000万，则预估全年净利润4000万）",
+        "name": "市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "number",
+        "description": "涨跌幅（%）",
+        "name": "涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "当前价格（元）",
+        "name": "当前价格",
+        "descp": ""
+      },
+      {
+        "field_name": "sz",
+        "data_type": "number",
+        "description": "总市值（元）",
+        "name": "总市值",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交额（元）",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "ud",
+        "data_type": "number",
+        "description": "涨跌额（元）",
+        "name": "涨跌额",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "number",
+        "description": "成交量（手）",
+        "name": "成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "yc",
+        "data_type": "number",
+        "description": "昨日收盘价（元）",
+        "name": "昨日收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "number",
+        "description": "振幅（%）",
+        "name": "振幅",
+        "descp": ""
+      },
+      {
+        "field_name": "zs",
+        "data_type": "number",
+        "description": "涨速（%）",
+        "name": "涨速",
+        "descp": ""
+      },
+      {
+        "field_name": "sjl",
+        "data_type": "number",
+        "description": "市净率",
+        "name": "市净率",
+        "descp": ""
+      },
+      {
+        "field_name": "zdf60",
+        "data_type": "number",
+        "description": "60日涨跌幅（%）",
+        "name": "60日涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "zdfnc",
+        "data_type": "number",
+        "description": "年初至今涨跌幅（%）",
+        "name": "年初至今涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间yyyy-MM-ddHH:mm:ss",
+        "name": "更新时间yyyy-MM-ddHH:mm:ss",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "当天逐笔交易",
+    "api_url": "http://api.biyingapi.com/hsrl/zbjy/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取当天逐笔交易数据，按时间倒序。",
+    "update_frequency": "21:00",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "d",
+        "data_type": "string",
+        "description": "数据归属日期（yyyy-MM-dd）",
+        "name": "数据归属日期",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "时间（HH:mm:dd）",
+        "name": "时间",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "number",
+        "description": "成交量（股）",
+        "name": "成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "成交价",
+        "name": "成交价",
+        "descp": ""
+      },
+      {
+        "field_name": "ts",
+        "data_type": "number",
+        "description": "交易方向（0：中性盘，1：买入，2：卖出）",
+        "name": "交易方向",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "实时交易数据",
+    "api_url": "https://api.biyingapi.com/hsstock/real/time/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取实时交易数据（您可以理解为日线的最新数据）。",
+    "update_frequency": "实时",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "最新价",
+        "name": "最新价",
+        "descp": ""
+      },
+      {
+        "field_name": "o",
+        "data_type": "number",
+        "description": "开盘价",
+        "name": "开盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "number",
+        "description": "最高价",
+        "name": "最高价",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "number",
+        "description": "最低价",
+        "name": "最低价",
+        "descp": ""
+      },
+      {
+        "field_name": "yc",
+        "data_type": "number",
+        "description": "前收盘价",
+        "name": "前收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交总额",
+        "name": "成交总额",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "number",
+        "description": "成交总量",
+        "name": "成交总量",
+        "descp": ""
+      },
+      {
+        "field_name": "pv",
+        "data_type": "number",
+        "description": "原始成交总量",
+        "name": "原始成交总量",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      },
+      {
+        "field_name": "ud",
+        "data_type": "float",
+        "description": "涨跌额",
+        "name": "涨跌额",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "float",
+        "description": "涨跌幅",
+        "name": "涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "float",
+        "description": "振幅",
+        "name": "振幅",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      },
+      {
+        "field_name": "pe",
+        "data_type": "number",
+        "description": "市盈率",
+        "name": "市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "tr",
+        "data_type": "number",
+        "description": "换手率",
+        "name": "换手率",
+        "descp": ""
+      },
+      {
+        "field_name": "pb_ratio",
+        "data_type": "number",
+        "description": "市净率",
+        "name": "市净率",
+        "descp": ""
+      },
+      {
+        "field_name": "tv",
+        "data_type": "number",
+        "description": "成交量",
+        "name": "成交量",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "买卖五档盘口",
+    "api_url": "https://api.biyingapi.com/hsstock/real/five/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取实时买卖五档盘口数据。",
+    "update_frequency": "实时",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "ps",
+        "data_type": "number",
+        "description": "委卖价",
+        "name": "委卖价",
+        "descp": ""
+      },
+      {
+        "field_name": "pb",
+        "data_type": "number",
+        "description": "委买价",
+        "name": "委买价",
+        "descp": ""
+      },
+      {
+        "field_name": "vs",
+        "data_type": "number",
+        "description": "委卖量",
+        "name": "委卖量",
+        "descp": ""
+      },
+      {
+        "field_name": "vb",
+        "data_type": "number",
+        "description": "委买量",
+        "name": "委买量",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "实时交易数据（多股）",
+    "api_url": "http://api.biyingapi.com/hsrl/ssjy_more/biyinglicence?stock_codes=000001,000002,000004",
+    "api_description": "一次性获取《股票列表》中不超过20支股票的实时交易数据（您可以理解为日线的最新数据）",
+    "update_frequency": "实时",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "p",
+        "data_type": "number",
+        "description": "最新价",
+        "name": "最新价",
+        "descp": ""
+      },
+      {
+        "field_name": "o",
+        "data_type": "number",
+        "description": "开盘价",
+        "name": "开盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "number",
+        "description": "最高价",
+        "name": "最高价",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "number",
+        "description": "最低价",
+        "name": "最低价",
+        "descp": ""
+      },
+      {
+        "field_name": "yc",
+        "data_type": "number",
+        "description": "前收盘价",
+        "name": "前收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "cje",
+        "data_type": "number",
+        "description": "成交总额",
+        "name": "成交总额",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "number",
+        "description": "成交总量",
+        "name": "成交总量",
+        "descp": ""
+      },
+      {
+        "field_name": "pv",
+        "data_type": "number",
+        "description": "原始成交总量",
+        "name": "原始成交总量",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      },
+      {
+        "field_name": "ud",
+        "data_type": "float",
+        "description": "涨跌额",
+        "name": "涨跌额",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "float",
+        "description": "涨跌幅",
+        "name": "涨跌幅",
+        "descp": ""
+      },
+      {
+        "field_name": "zf",
+        "data_type": "float",
+        "description": "振幅",
+        "name": "振幅",
+        "descp": ""
+      },
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      },
+      {
+        "field_name": "pe",
+        "data_type": "number",
+        "description": "市盈率",
+        "name": "市盈率",
+        "descp": ""
+      },
+      {
+        "field_name": "tr",
+        "data_type": "number",
+        "description": "换手率",
+        "name": "换手率",
+        "descp": ""
+      },
+      {
+        "field_name": "pb_ratio",
+        "data_type": "number",
+        "description": "市净率",
+        "name": "市净率",
+        "descp": ""
+      },
+      {
+        "field_name": "tv",
+        "data_type": "number",
+        "description": "成交量",
+        "name": "成交量",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "资金流向数据",
+    "api_url": "http://api.biyingapi.com/hsstock/history/transaction/000001/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取资金流向数据。开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'，不设置开始时间和结束时间则为全部历史数据。同时可以指定获取数据条数，例如指定lt=10，则获取最新的10条数据。下列字段中，特大单为成交金额大于或等于100万元或成交量大于或等于5000手，大单为成交金额大于或等于20万元或成交量大于或等于1000手，中单为成交金额大于或等于4万元或成交量大于或等于200手，其他为小单。",
+    "update_frequency": "每日21:30更新",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "int",
+        "description": "交易时间",
+        "name": "交易时间",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzds",
+        "data_type": "int",
+        "description": "主买单总单数",
+        "name": "主买单总单数",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszds",
+        "data_type": "int",
+        "description": "主卖单总单数",
+        "name": "主卖单总单数",
+        "descp": ""
+      },
+      {
+        "field_name": "dddx",
+        "data_type": "float",
+        "description": "大单动向",
+        "name": "大单动向",
+        "descp": ""
+      },
+      {
+        "field_name": "zddy",
+        "data_type": "float",
+        "description": "涨跌动因",
+        "name": "涨跌动因",
+        "descp": ""
+      },
+      {
+        "field_name": "ddcf",
+        "data_type": "float",
+        "description": "大单差分",
+        "name": "大单差分",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzdszl",
+        "data_type": "int",
+        "description": "主买单总单数增量",
+        "name": "主买单总单数增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszdszl",
+        "data_type": "int",
+        "description": "主卖单总单数增量",
+        "name": "主卖单总单数增量",
+        "descp": ""
+      },
+      {
+        "field_name": "cjbszl",
+        "data_type": "int",
+        "description": "成交笔数增量",
+        "name": "成交笔数增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbtdcje",
+        "data_type": "float",
+        "description": "主买特大单成交额",
+        "name": "主买特大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbddcje",
+        "data_type": "float",
+        "description": "主买大单成交额",
+        "name": "主买大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzdcje",
+        "data_type": "float",
+        "description": "主买中单成交额",
+        "name": "主买中单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbxdcje",
+        "data_type": "float",
+        "description": "主买小单成交额",
+        "name": "主买小单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbljcje",
+        "data_type": "float",
+        "description": "主买累计成交额",
+        "name": "主买累计成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmstdcje",
+        "data_type": "float",
+        "description": "主卖特大单成交额",
+        "name": "主卖特大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsddcje",
+        "data_type": "float",
+        "description": "主卖大单成交额",
+        "name": "主卖大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszdcje",
+        "data_type": "float",
+        "description": "主卖中单成交额",
+        "name": "主卖中单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsxdcje",
+        "data_type": "float",
+        "description": "主卖小单成交额",
+        "name": "主卖小单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsljcje",
+        "data_type": "float",
+        "description": "主卖累计成交额",
+        "name": "主卖累计成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbtdcje",
+        "data_type": "float",
+        "description": "被动买特大单成交额",
+        "name": "被动买特大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbddcje",
+        "data_type": "float",
+        "description": "被动买大单成交额",
+        "name": "被动买大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbzdcje",
+        "data_type": "float",
+        "description": "被动买中单成交额",
+        "name": "被动买中单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbxdcje",
+        "data_type": "float",
+        "description": "被动买小单成交额",
+        "name": "被动买小单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbljcje",
+        "data_type": "float",
+        "description": "被动买累计成交额",
+        "name": "被动买累计成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmstdcje",
+        "data_type": "float",
+        "description": "被动卖特大单成交额",
+        "name": "被动卖特大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsddcje",
+        "data_type": "float",
+        "description": "被动卖大单成交额",
+        "name": "被动卖大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmszdcje",
+        "data_type": "float",
+        "description": "被动卖中单成交额",
+        "name": "被动卖中单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsxdcje",
+        "data_type": "float",
+        "description": "被动卖小单成交额",
+        "name": "被动卖小单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsljcje",
+        "data_type": "float",
+        "description": "被动卖累计成交额",
+        "name": "被动卖累计成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrcdcje",
+        "data_type": "float",
+        "description": "净流入超大单成交额",
+        "name": "净流入超大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrddcje",
+        "data_type": "float",
+        "description": "净流入大单成交额",
+        "name": "净流入大单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrzdcje",
+        "data_type": "float",
+        "description": "净流入中单成交额",
+        "name": "净流入中单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrxdcje",
+        "data_type": "float",
+        "description": "净流入小单成交额",
+        "name": "净流入小单成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbtdcjl",
+        "data_type": "int",
+        "description": "主买特大单成交量",
+        "name": "主买特大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbddcjl",
+        "data_type": "int",
+        "description": "主买大单成交量",
+        "name": "主买大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzdcjl",
+        "data_type": "int",
+        "description": "主买中单成交量",
+        "name": "主买中单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbxdcjl",
+        "data_type": "int",
+        "description": "主买小单成交量",
+        "name": "主买小单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbljcjl",
+        "data_type": "int",
+        "description": "主买累计成交量",
+        "name": "主买累计成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmstdcjl",
+        "data_type": "int",
+        "description": "主卖特大单成交量",
+        "name": "主卖特大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsddcjl",
+        "data_type": "int",
+        "description": "主卖大单成交量",
+        "name": "主卖大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszdcjl",
+        "data_type": "int",
+        "description": "主卖中单成交量",
+        "name": "主卖中单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsxdcjl",
+        "data_type": "int",
+        "description": "主卖小单成交量",
+        "name": "主卖小单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsljcjl",
+        "data_type": "int",
+        "description": "主卖累计成交量",
+        "name": "主卖累计成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbtdcjl",
+        "data_type": "int",
+        "description": "被动买特大单成交量",
+        "name": "被动买特大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbddcjl",
+        "data_type": "int",
+        "description": "被动买大单成交量",
+        "name": "被动买大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbzdcjl",
+        "data_type": "int",
+        "description": "被动买中单成交量",
+        "name": "被动买中单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbxdcjl",
+        "data_type": "int",
+        "description": "被动买小单成交量",
+        "name": "被动买小单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbljcjl",
+        "data_type": "int",
+        "description": "被动买累计成交量",
+        "name": "被动买累计成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmstdcjl",
+        "data_type": "int",
+        "description": "被动卖特大单成交量",
+        "name": "被动卖特大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsddcjl",
+        "data_type": "int",
+        "description": "被动卖大单成交量",
+        "name": "被动卖大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmszdcjl",
+        "data_type": "int",
+        "description": "被动卖中单成交量",
+        "name": "被动卖中单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsxdcjl",
+        "data_type": "int",
+        "description": "被动卖小单成交量",
+        "name": "被动卖小单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsljcjl",
+        "data_type": "int",
+        "description": "被动卖累计成交量",
+        "name": "被动卖累计成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrcdcjl",
+        "data_type": "int",
+        "description": "净流入超大单成交量",
+        "name": "净流入超大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrddcjl",
+        "data_type": "int",
+        "description": "净流入大单成交量",
+        "name": "净流入大单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrzdcjl",
+        "data_type": "int",
+        "description": "净流入中单成交量",
+        "name": "净流入中单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrxdcjl",
+        "data_type": "int",
+        "description": "净流入小单成交量",
+        "name": "净流入小单成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbtdcjzl",
+        "data_type": "float",
+        "description": "主买特大单成交额增量",
+        "name": "主买特大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbddcjzl",
+        "data_type": "float",
+        "description": "主买大单成交额增量",
+        "name": "主买大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzdcjzl",
+        "data_type": "float",
+        "description": "主买中单成交额增量",
+        "name": "主买中单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbxdcjzl",
+        "data_type": "float",
+        "description": "主买小单成交额增量",
+        "name": "主买小单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbljcjzl",
+        "data_type": "float",
+        "description": "主买累计成交额增量",
+        "name": "主买累计成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmstdcjzl",
+        "data_type": "float",
+        "description": "主卖特大单成交额增量",
+        "name": "主卖特大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsddcjzl",
+        "data_type": "float",
+        "description": "主卖大单成交额增量",
+        "name": "主卖大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszdcjzl",
+        "data_type": "float",
+        "description": "主卖中单成交额增量",
+        "name": "主卖中单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsxdcjzl",
+        "data_type": "float",
+        "description": "主卖小单成交额增量",
+        "name": "主卖小单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsljcjzl",
+        "data_type": "float",
+        "description": "主卖累计成交额增量",
+        "name": "主卖累计成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbtdcjzl",
+        "data_type": "float",
+        "description": "被动买特大单成交额增量",
+        "name": "被动买特大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbddcjzl",
+        "data_type": "float",
+        "description": "被动买大单成交额增量",
+        "name": "被动买大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbzdcjzl",
+        "data_type": "float",
+        "description": "被动买中单成交额增量",
+        "name": "被动买中单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbxdcjzl",
+        "data_type": "float",
+        "description": "被动买小单成交额增量",
+        "name": "被动买小单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbljcjzl",
+        "data_type": "float",
+        "description": "被动买累计成交额增量",
+        "name": "被动买累计成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmstdcjzl",
+        "data_type": "float",
+        "description": "被动卖特大单成交额增量",
+        "name": "被动卖特大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsddcjzl",
+        "data_type": "float",
+        "description": "被动卖大单成交额增量",
+        "name": "被动卖大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmszdcjzl",
+        "data_type": "float",
+        "description": "被动卖中单成交额增量",
+        "name": "被动卖中单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsxdcjzl",
+        "data_type": "float",
+        "description": "被动卖小单成交额增量",
+        "name": "被动卖小单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsljcjzl",
+        "data_type": "float",
+        "description": "被动卖累计成交额增量",
+        "name": "被动卖累计成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrcdcjzl",
+        "data_type": "float",
+        "description": "净流入超大单成交额增量",
+        "name": "净流入超大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrddcjzl",
+        "data_type": "float",
+        "description": "净流入大单成交额增量",
+        "name": "净流入大单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrzdcjzl",
+        "data_type": "float",
+        "description": "净流入中单成交额增量",
+        "name": "净流入中单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrxdcjzl",
+        "data_type": "float",
+        "description": "净流入小单成交额增量",
+        "name": "净流入小单成交额增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbtdcjzlv",
+        "data_type": "int",
+        "description": "主买特大单成交量增量",
+        "name": "主买特大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbddcjzlv",
+        "data_type": "int",
+        "description": "主买大单成交量增量",
+        "name": "主买大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbzdcjzlv",
+        "data_type": "int",
+        "description": "主买中单成交量增量",
+        "name": "主买中单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbxdcjzlv",
+        "data_type": "int",
+        "description": "主买小单成交量增量",
+        "name": "主买小单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmbljcjzlv",
+        "data_type": "int",
+        "description": "主买累计成交量增量",
+        "name": "主买累计成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmstdcjzlv",
+        "data_type": "int",
+        "description": "主卖特大单成交量增量",
+        "name": "主卖特大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsddcjzlv",
+        "data_type": "int",
+        "description": "主卖大单成交量增量",
+        "name": "主卖大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmszdcjzlv",
+        "data_type": "int",
+        "description": "主卖中单成交量增量",
+        "name": "主卖中单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsxdcjzlv",
+        "data_type": "int",
+        "description": "主卖小单成交量增量",
+        "name": "主卖小单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "zmsljcjzlv",
+        "data_type": "int",
+        "description": "主卖累计成交量增量",
+        "name": "主卖累计成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbtdcjzlv",
+        "data_type": "int",
+        "description": "被动买特大单成交量增量",
+        "name": "被动买特大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbddcjzlv",
+        "data_type": "int",
+        "description": "被动买大单成交量增量",
+        "name": "被动买大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbzdcjzlv",
+        "data_type": "int",
+        "description": "被动买中单成交量增量",
+        "name": "被动买中单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbxdcjzlv",
+        "data_type": "int",
+        "description": "被动买小单成交量增量",
+        "name": "被动买小单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmbljcjzlv",
+        "data_type": "int",
+        "description": "被动买累计成交量增量",
+        "name": "被动买累计成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmstdcjzlv",
+        "data_type": "int",
+        "description": "被动卖特大单成交量增量",
+        "name": "被动卖特大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsddcjzlv",
+        "data_type": "int",
+        "description": "被动卖大单成交量增量",
+        "name": "被动卖大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmszdcjzlv",
+        "data_type": "int",
+        "description": "被动卖中单成交量增量",
+        "name": "被动卖中单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsxdcjzlv",
+        "data_type": "int",
+        "description": "被动卖小单成交量增量",
+        "name": "被动卖小单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdmsljcjzlv",
+        "data_type": "int",
+        "description": "被动卖累计成交量增量",
+        "name": "被动卖累计成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrcdcjzlv",
+        "data_type": "int",
+        "description": "净流入超大单成交量增量",
+        "name": "净流入超大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrddcjzlv",
+        "data_type": "int",
+        "description": "净流入大单成交量增量",
+        "name": "净流入大单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrzdcjzlv",
+        "data_type": "int",
+        "description": "净流入中单成交量增量",
+        "name": "净流入中单成交量增量",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrxdcjzlv",
+        "data_type": "int",
+        "description": "净流入小单成交量增量",
+        "name": "净流入小单成交量增量",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "最新分时交易",
+    "api_url": "https://api.biyingapi.com/hsstock/latest/000001.SZ/d/n/biyinglicence?lt=1",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取最新交易数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级无除权数据，对应的参数为n。",
+    "update_frequency": "实时",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间",
+        "name": "交易时间",
+        "descp": ""
+      },
+      {
+        "field_name": "o",
+        "data_type": "float",
+        "description": "开盘价",
+        "name": "开盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "float",
+        "description": "最高价",
+        "name": "最高价",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "float",
+        "description": "最低价",
+        "name": "最低价",
+        "descp": ""
+      },
+      {
+        "field_name": "c",
+        "data_type": "float",
+        "description": "收盘价",
+        "name": "收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "float",
+        "description": "成交量",
+        "name": "成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "a",
+        "data_type": "float",
+        "description": "成交额",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "float",
+        "description": "前收盘价",
+        "name": "前收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "sf",
+        "data_type": "int",
+        "description": "停牌 1停牌，0 不停牌",
+        "name": "停牌 1停牌",
+        "descp": "0 不停牌"
+      }
+    ]
+  },
+  {
+    "api_name": "历史分时交易",
+    "api_url": "https://api.biyingapi.com/hsstock/history/000001.SZ/d/n/biyinglicence?st=20250101&et=20250430&lt=100",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取历史交易数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级无除权数据，对应的参数为n。开始时间以及结束时间的格式均为 YYYYMMDD 或 YYYYMMDDhhmmss，例如：'20240101' 或'20241231235959'。不设置开始时间和结束时间则为全部历史数据。",
+    "update_frequency": "分钟级别数据盘中更新，分时越小越优先更新，如5分钟级别会每5分钟更新，15分钟级别会每15分钟更新，以此类推，日线及以上级别每日15:30开始更新，预计17:10完成",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间",
+        "name": "交易时间",
+        "descp": ""
+      },
+      {
+        "field_name": "o",
+        "data_type": "float",
+        "description": "开盘价",
+        "name": "开盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "float",
+        "description": "最高价",
+        "name": "最高价",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "float",
+        "description": "最低价",
+        "name": "最低价",
+        "descp": ""
+      },
+      {
+        "field_name": "c",
+        "data_type": "float",
+        "description": "收盘价",
+        "name": "收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "v",
+        "data_type": "float",
+        "description": "成交量",
+        "name": "成交量",
+        "descp": ""
+      },
+      {
+        "field_name": "a",
+        "data_type": "float",
+        "description": "成交额",
+        "name": "成交额",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "float",
+        "description": "前收盘价",
+        "name": "前收盘价",
+        "descp": ""
+      },
+      {
+        "field_name": "sf",
+        "data_type": "int",
+        "description": "停牌 1停牌，0 不停牌",
+        "name": "停牌 1停牌",
+        "descp": "0 不停牌"
+      }
+    ]
+  },
+  {
+    "api_name": "历史涨跌停价格",
+    "api_url": "http://api.biyingapi.com/hsstock/stopprice/history/000001.SZ/biyinglicence?st=20240501&et=20240601",
+    "api_description": "根据《股票列表》得到的股票代码获取历史涨跌停价格，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部历史数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易日期",
+        "name": "交易日期",
+        "descp": ""
+      },
+      {
+        "field_name": "h",
+        "data_type": "float",
+        "description": "涨停价格",
+        "name": "涨停价格",
+        "descp": ""
+      },
+      {
+        "field_name": "l",
+        "data_type": "float",
+        "description": "跌停价格",
+        "name": "跌停价格",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "行情指标",
+    "api_url": "http://api.biyingapi.com/hsstock/indicators/600519.SH/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码获取各项行情指标，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "实时",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "time",
+        "data_type": "string",
+        "description": "更新时间",
+        "name": "更新时间",
+        "descp": ""
+      },
+      {
+        "field_name": "lb",
+        "data_type": "float",
+        "description": "量比",
+        "name": "量比",
+        "descp": ""
+      },
+      {
+        "field_name": "om",
+        "data_type": "float",
+        "description": "1分钟涨速(%)",
+        "name": "1分钟涨速",
+        "descp": ""
+      },
+      {
+        "field_name": "fm",
+        "data_type": "float",
+        "description": "5分钟涨速(%)",
+        "name": "5分钟涨速",
+        "descp": ""
+      },
+      {
+        "field_name": "3d",
+        "data_type": "float",
+        "description": "3日涨幅(%)",
+        "name": "3日涨幅",
+        "descp": ""
+      },
+      {
+        "field_name": "5d",
+        "data_type": "float",
+        "description": "5日涨幅(%)",
+        "name": "5日涨幅",
+        "descp": ""
+      },
+      {
+        "field_name": "10d",
+        "data_type": "float",
+        "description": "10日涨幅(%)",
+        "name": "10日涨幅",
+        "descp": ""
+      },
+      {
+        "field_name": "3t",
+        "data_type": "float",
+        "description": "3日换手(%)",
+        "name": "3日换手",
+        "descp": ""
+      },
+      {
+        "field_name": "5t",
+        "data_type": "float",
+        "description": "5日换手(%)",
+        "name": "5日换手",
+        "descp": ""
+      },
+      {
+        "field_name": "10t",
+        "data_type": "float",
+        "description": "10日换手(%)",
+        "name": "10日换手",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "股票基础信息",
+    "api_url": "http://api.biyingapi.com/hsstock/instrument/000001.SZ/biyinglicence",
+    "api_description": "依据《股票列表》中的股票代码获取股票的基础信息",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "ei",
+        "data_type": "string",
+        "description": "市场代码",
+        "name": "市场代码",
+        "descp": ""
+      },
+      {
+        "field_name": "ii",
+        "data_type": "string",
+        "description": "股票代码",
+        "name": "股票代码",
+        "descp": ""
+      },
+      {
+        "field_name": "name",
+        "data_type": "string",
+        "description": "股票名称",
+        "name": "股票名称",
+        "descp": ""
+      },
+      {
+        "field_name": "od",
+        "data_type": "string",
+        "description": "上市日期(股票IPO日期)",
+        "name": "上市日期",
+        "descp": ""
+      },
+      {
+        "field_name": "pc",
+        "data_type": "float",
+        "description": "前收盘价格",
+        "name": "前收盘价格",
+        "descp": ""
+      },
+      {
+        "field_name": "up",
+        "data_type": "float",
+        "description": "当日涨停价",
+        "name": "当日涨停价",
+        "descp": ""
+      },
+      {
+        "field_name": "dp",
+        "data_type": "float",
+        "description": "当日跌停价",
+        "name": "当日跌停价",
+        "descp": ""
+      },
+      {
+        "field_name": "fv",
+        "data_type": "float",
+        "description": "流通股本",
+        "name": "流通股本",
+        "descp": ""
+      },
+      {
+        "field_name": "tv",
+        "data_type": "float",
+        "description": "总股本",
+        "name": "总股本",
+        "descp": ""
+      },
+      {
+        "field_name": "pk",
+        "data_type": "float",
+        "description": "最小价格变动单位",
+        "name": "最小价格变动单位",
+        "descp": ""
+      },
+      {
+        "field_name": "is",
+        "data_type": "int",
+        "description": "股票停牌状态(<=0:正常交易（-1:复牌）;>=1停牌天数;)",
+        "name": "股票停牌状态",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "资产负债表",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/balance/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取资产负债表，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "plrq",
+        "data_type": "string",
+        "description": "披露日期",
+        "name": "披露日期",
+        "descp": ""
+      },
+      {
+        "field_name": "nbysk",
+        "data_type": "float",
+        "description": "内部应收款",
+        "name": "内部应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcql",
+        "data_type": "float",
+        "description": "固定资产清理",
+        "name": "固定资产清理",
+        "descp": ""
+      },
+      {
+        "field_name": "yffbzk",
+        "data_type": "float",
+        "description": "应付分保账款",
+        "name": "应付分保账款",
+        "descp": ""
+      },
+      {
+        "field_name": "jsbfj",
+        "data_type": "float",
+        "description": "结算备付金",
+        "name": "结算备付金",
+        "descp": ""
+      },
+      {
+        "field_name": "ysbf",
+        "data_type": "float",
+        "description": "应收保费",
+        "name": "应收保费",
+        "descp": ""
+      },
+      {
+        "field_name": "ysfbzk",
+        "data_type": "float",
+        "description": "应收分保账款",
+        "name": "应收分保账款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysfbhtzbj",
+        "data_type": "float",
+        "description": "应收分保合同准备金",
+        "name": "应收分保合同准备金",
+        "descp": ""
+      },
+      {
+        "field_name": "ysgl",
+        "data_type": "float",
+        "description": "应收股利",
+        "name": "应收股利",
+        "descp": ""
+      },
+      {
+        "field_name": "ysckts",
+        "data_type": "float",
+        "description": "应收出口退税",
+        "name": "应收出口退税",
+        "descp": ""
+      },
+      {
+        "field_name": "ysbtk",
+        "data_type": "float",
+        "description": "应收补贴款",
+        "name": "应收补贴款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysbzj",
+        "data_type": "float",
+        "description": "应收保证金",
+        "name": "应收保证金",
+        "descp": ""
+      },
+      {
+        "field_name": "dfy",
+        "data_type": "float",
+        "description": "待摊费用",
+        "name": "待摊费用",
+        "descp": ""
+      },
+      {
+        "field_name": "dclldzcsy",
+        "data_type": "float",
+        "description": "待处理流动资产损益",
+        "name": "待处理流动资产损益",
+        "descp": ""
+      },
+      {
+        "field_name": "ynndqdfldzc",
+        "data_type": "float",
+        "description": "一年内到期的非流动资产",
+        "name": "一年内到期的非流动资产",
+        "descp": ""
+      },
+      {
+        "field_name": "cqysk",
+        "data_type": "float",
+        "description": "长期应收款",
+        "name": "长期应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "qtcqtz",
+        "data_type": "float",
+        "description": "其他长期投资",
+        "name": "其他长期投资",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcyz",
+        "data_type": "float",
+        "description": "固定资产原值",
+        "name": "固定资产原值",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcjz",
+        "data_type": "float",
+        "description": "固定资产净值",
+        "name": "固定资产净值",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcjzzbj",
+        "data_type": "float",
+        "description": "固定资产减值准备",
+        "name": "固定资产减值准备",
+        "descp": ""
+      },
+      {
+        "field_name": "scxswzc",
+        "data_type": "float",
+        "description": "生产性生物资产",
+        "name": "生产性生物资产",
+        "descp": ""
+      },
+      {
+        "field_name": "gyxswzc",
+        "data_type": "float",
+        "description": "公益性生物资产",
+        "name": "公益性生物资产",
+        "descp": ""
+      },
+      {
+        "field_name": "yqzc",
+        "data_type": "float",
+        "description": "油气资产",
+        "name": "油气资产",
+        "descp": ""
+      },
+      {
+        "field_name": "kfzc",
+        "data_type": "float",
+        "description": "开发支出",
+        "name": "开发支出",
+        "descp": ""
+      },
+      {
+        "field_name": "gqfzltq",
+        "data_type": "float",
+        "description": "股权分置流通权",
+        "name": "股权分置流通权",
+        "descp": ""
+      },
+      {
+        "field_name": "qtfldzc",
+        "data_type": "float",
+        "description": "其他非流动资产",
+        "name": "其他非流动资产",
+        "descp": ""
+      },
+      {
+        "field_name": "yfsxfyj",
+        "data_type": "float",
+        "description": "应付手续费及佣金",
+        "name": "应付手续费及佣金",
+        "descp": ""
+      },
+      {
+        "field_name": "qtjyk",
+        "data_type": "float",
+        "description": "其他应交款",
+        "name": "其他应交款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfbzj",
+        "data_type": "float",
+        "description": "应付保证金",
+        "name": "应付保证金",
+        "descp": ""
+      },
+      {
+        "field_name": "nbyfk",
+        "data_type": "float",
+        "description": "内部应付款",
+        "name": "内部应付款",
+        "descp": ""
+      },
+      {
+        "field_name": "ytfy",
+        "data_type": "float",
+        "description": "预提费用",
+        "name": "预提费用",
+        "descp": ""
+      },
+      {
+        "field_name": "bxhtzbj",
+        "data_type": "float",
+        "description": "保险合同准备金",
+        "name": "保险合同准备金",
+        "descp": ""
+      },
+      {
+        "field_name": "dlmmzqk",
+        "data_type": "float",
+        "description": "代理买卖证券款",
+        "name": "代理买卖证券款",
+        "descp": ""
+      },
+      {
+        "field_name": "dlcxzqk",
+        "data_type": "float",
+        "description": "代理承销证券款",
+        "name": "代理承销证券款",
+        "descp": ""
+      },
+      {
+        "field_name": "gjpjjs",
+        "data_type": "float",
+        "description": "国际票证结算",
+        "name": "国际票证结算",
+        "descp": ""
+      },
+      {
+        "field_name": "gnpjjs",
+        "data_type": "float",
+        "description": "国内票证结算",
+        "name": "国内票证结算",
+        "descp": ""
+      },
+      {
+        "field_name": "dysr",
+        "data_type": "float",
+        "description": "递延收益",
+        "name": "递延收益",
+        "descp": ""
+      },
+      {
+        "field_name": "yfdqzq",
+        "data_type": "float",
+        "description": "应付短期债券",
+        "name": "应付短期债券",
+        "descp": ""
+      },
+      {
+        "field_name": "cqdysr",
+        "data_type": "float",
+        "description": "长期递延收益",
+        "name": "长期递延收益",
+        "descp": ""
+      },
+      {
+        "field_name": "wqddtzss",
+        "data_type": "float",
+        "description": "未确定的投资损失",
+        "name": "未确定的投资损失",
+        "descp": ""
+      },
+      {
+        "field_name": "nfpxjgl",
+        "data_type": "float",
+        "description": "拟分配现金股利",
+        "name": "拟分配现金股利",
+        "descp": ""
+      },
+      {
+        "field_name": "yjfz",
+        "data_type": "float",
+        "description": "预计负债",
+        "name": "预计负债",
+        "descp": ""
+      },
+      {
+        "field_name": "xsckjtycf",
+        "data_type": "float",
+        "description": "吸收存款及同业存放",
+        "name": "吸收存款及同业存放",
+        "descp": ""
+      },
+      {
+        "field_name": "yjldfz",
+        "data_type": "float",
+        "description": "预计流动负债",
+        "name": "预计流动负债",
+        "descp": ""
+      },
+      {
+        "field_name": "j_kcg",
+        "data_type": "float",
+        "description": "减:库存股",
+        "name": "减:库存股",
+        "descp": ""
+      },
+      {
+        "field_name": "hbzj",
+        "data_type": "float",
+        "description": "货币资金",
+        "name": "货币资金",
+        "descp": ""
+      },
+      {
+        "field_name": "cczj",
+        "data_type": "float",
+        "description": "拆出资金",
+        "name": "拆出资金",
+        "descp": ""
+      },
+      {
+        "field_name": "jyxjrzc",
+        "data_type": "float",
+        "description": "交易性金融资产",
+        "name": "交易性金融资产",
+        "descp": ""
+      },
+      {
+        "field_name": "ysjrzc",
+        "data_type": "float",
+        "description": "衍生金融资产",
+        "name": "衍生金融资产",
+        "descp": ""
+      },
+      {
+        "field_name": "yspj",
+        "data_type": "float",
+        "description": "应收票据",
+        "name": "应收票据",
+        "descp": ""
+      },
+      {
+        "field_name": "yszk",
+        "data_type": "float",
+        "description": "应收账款",
+        "name": "应收账款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfkx",
+        "data_type": "float",
+        "description": "预付款项",
+        "name": "预付款项",
+        "descp": ""
+      },
+      {
+        "field_name": "yslx",
+        "data_type": "float",
+        "description": "应收利息",
+        "name": "应收利息",
+        "descp": ""
+      },
+      {
+        "field_name": "qtysk",
+        "data_type": "float",
+        "description": "其他应收款",
+        "name": "其他应收款",
+        "descp": ""
+      },
+      {
+        "field_name": "mrfsjrzck",
+        "data_type": "float",
+        "description": "买入返售金融资产款",
+        "name": "买入返售金融资产款",
+        "descp": ""
+      },
+      {
+        "field_name": "gyjzjzbdqjsrdq",
+        "data_type": "float",
+        "description": "以公允价值计量且其变动计入当期损益的金融资产",
+        "name": "以公允价值计量且其变动计入当期损益的金融资产",
+        "descp": ""
+      },
+      {
+        "field_name": "ch",
+        "data_type": "float",
+        "description": "存货",
+        "name": "存货",
+        "descp": ""
+      },
+      {
+        "field_name": "qtldzc",
+        "data_type": "float",
+        "description": "其他流动资产",
+        "name": "其他流动资产",
+        "descp": ""
+      },
+      {
+        "field_name": "ldzchj",
+        "data_type": "float",
+        "description": "流动资产合计",
+        "name": "流动资产合计",
+        "descp": ""
+      },
+      {
+        "field_name": "ffdkjjd",
+        "data_type": "float",
+        "description": "发放贷款及垫款",
+        "name": "发放贷款及垫款",
+        "descp": ""
+      },
+      {
+        "field_name": "kkgsjrzc",
+        "data_type": "float",
+        "description": "可供出售金融资产",
+        "name": "可供出售金融资产",
+        "descp": ""
+      },
+      {
+        "field_name": "cyzdqtz",
+        "data_type": "float",
+        "description": "持有至到期投资",
+        "name": "持有至到期投资",
+        "descp": ""
+      },
+      {
+        "field_name": "cqgqtz",
+        "data_type": "float",
+        "description": "长期股权投资",
+        "name": "长期股权投资",
+        "descp": ""
+      },
+      {
+        "field_name": "tzxfd",
+        "data_type": "float",
+        "description": "投资性房地产",
+        "name": "投资性房地产",
+        "descp": ""
+      },
+      {
+        "field_name": "ljzj",
+        "data_type": "float",
+        "description": "累计折旧",
+        "name": "累计折旧",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzc",
+        "data_type": "float",
+        "description": "固定资产",
+        "name": "固定资产",
+        "descp": ""
+      },
+      {
+        "field_name": "zjgc",
+        "data_type": "float",
+        "description": "在建工程",
+        "name": "在建工程",
+        "descp": ""
+      },
+      {
+        "field_name": "gcwz",
+        "data_type": "float",
+        "description": "工程物资",
+        "name": "工程物资",
+        "descp": ""
+      },
+      {
+        "field_name": "cqfz",
+        "data_type": "float",
+        "description": "长期负债",
+        "name": "长期负债",
+        "descp": ""
+      },
+      {
+        "field_name": "wxzc",
+        "data_type": "float",
+        "description": "无形资产",
+        "name": "无形资产",
+        "descp": ""
+      },
+      {
+        "field_name": "sy",
+        "data_type": "float",
+        "description": "商誉",
+        "name": "商誉",
+        "descp": ""
+      },
+      {
+        "field_name": "cqdtfy",
+        "data_type": "float",
+        "description": "长期待摊费用",
+        "name": "长期待摊费用",
+        "descp": ""
+      },
+      {
+        "field_name": "dysdszc",
+        "data_type": "float",
+        "description": "递延所得税资产",
+        "name": "递延所得税资产",
+        "descp": ""
+      },
+      {
+        "field_name": "fldzchj",
+        "data_type": "float",
+        "description": "非流动资产合计",
+        "name": "非流动资产合计",
+        "descp": ""
+      },
+      {
+        "field_name": "zczj",
+        "data_type": "float",
+        "description": "资产总计",
+        "name": "资产总计",
+        "descp": ""
+      },
+      {
+        "field_name": "dqjk",
+        "data_type": "float",
+        "description": "短期借款",
+        "name": "短期借款",
+        "descp": ""
+      },
+      {
+        "field_name": "xzyhyhk",
+        "data_type": "float",
+        "description": "向中央银行借款",
+        "name": "向中央银行借款",
+        "descp": ""
+      },
+      {
+        "field_name": "crzj",
+        "data_type": "float",
+        "description": "拆入资金",
+        "name": "拆入资金",
+        "descp": ""
+      },
+      {
+        "field_name": "jyxjrfz",
+        "data_type": "float",
+        "description": "交易性金融负债",
+        "name": "交易性金融负债",
+        "descp": ""
+      },
+      {
+        "field_name": "ysjrfz",
+        "data_type": "float",
+        "description": "衍生金融负债",
+        "name": "衍生金融负债",
+        "descp": ""
+      },
+      {
+        "field_name": "yfpj",
+        "data_type": "float",
+        "description": "应付票据",
+        "name": "应付票据",
+        "descp": ""
+      },
+      {
+        "field_name": "yfzk",
+        "data_type": "float",
+        "description": "应付账款",
+        "name": "应付账款",
+        "descp": ""
+      },
+      {
+        "field_name": "ysk",
+        "data_type": "float",
+        "description": "预收账款",
+        "name": "预收账款",
+        "descp": ""
+      },
+      {
+        "field_name": "mchgjrzck",
+        "data_type": "float",
+        "description": "卖出回购金融资产款",
+        "name": "卖出回购金融资产款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfgzxc",
+        "data_type": "float",
+        "description": "应付职工薪酬",
+        "name": "应付职工薪酬",
+        "descp": ""
+      },
+      {
+        "field_name": "yjsf",
+        "data_type": "float",
+        "description": "应交税费",
+        "name": "应交税费",
+        "descp": ""
+      },
+      {
+        "field_name": "yflx",
+        "data_type": "float",
+        "description": "应付利息",
+        "name": "应付利息",
+        "descp": ""
+      },
+      {
+        "field_name": "yfgl",
+        "data_type": "float",
+        "description": "应付股利",
+        "name": "应付股利",
+        "descp": ""
+      },
+      {
+        "field_name": "qtfzk",
+        "data_type": "float",
+        "description": "其他应付款",
+        "name": "其他应付款",
+        "descp": ""
+      },
+      {
+        "field_name": "ynndqdfldfz",
+        "data_type": "float",
+        "description": "一年内到期的非流动负债",
+        "name": "一年内到期的非流动负债",
+        "descp": ""
+      },
+      {
+        "field_name": "qtldfz",
+        "data_type": "float",
+        "description": "其他流动负债",
+        "name": "其他流动负债",
+        "descp": ""
+      },
+      {
+        "field_name": "ldfzhj",
+        "data_type": "float",
+        "description": "流动负债合计",
+        "name": "流动负债合计",
+        "descp": ""
+      },
+      {
+        "field_name": "cqjk",
+        "data_type": "float",
+        "description": "长期借款",
+        "name": "长期借款",
+        "descp": ""
+      },
+      {
+        "field_name": "yfzq",
+        "data_type": "float",
+        "description": "应付债券",
+        "name": "应付债券",
+        "descp": ""
+      },
+      {
+        "field_name": "cqyfk",
+        "data_type": "float",
+        "description": "长期应付款",
+        "name": "长期应付款",
+        "descp": ""
+      },
+      {
+        "field_name": "zxyfk",
+        "data_type": "float",
+        "description": "专项应付款",
+        "name": "专项应付款",
+        "descp": ""
+      },
+      {
+        "field_name": "dysdsfz",
+        "data_type": "float",
+        "description": "递延所得税负债",
+        "name": "递延所得税负债",
+        "descp": ""
+      },
+      {
+        "field_name": "qtfldfz",
+        "data_type": "float",
+        "description": "其他非流动负债",
+        "name": "其他非流动负债",
+        "descp": ""
+      },
+      {
+        "field_name": "fldfzhj",
+        "data_type": "float",
+        "description": "非流动负债合计",
+        "name": "非流动负债合计",
+        "descp": ""
+      },
+      {
+        "field_name": "fzhj",
+        "data_type": "float",
+        "description": "负债合计",
+        "name": "负债合计",
+        "descp": ""
+      },
+      {
+        "field_name": "sszb",
+        "data_type": "float",
+        "description": "实收资本(或股本)",
+        "name": "实收资本",
+        "descp": ""
+      },
+      {
+        "field_name": "zbgj",
+        "data_type": "float",
+        "description": "资本公积",
+        "name": "资本公积",
+        "descp": ""
+      },
+      {
+        "field_name": "zxzb",
+        "data_type": "float",
+        "description": "专项储备",
+        "name": "专项储备",
+        "descp": ""
+      },
+      {
+        "field_name": "ylgj",
+        "data_type": "float",
+        "description": "盈余公积",
+        "name": "盈余公积",
+        "descp": ""
+      },
+      {
+        "field_name": "ybfxzb",
+        "data_type": "float",
+        "description": "一般风险准备",
+        "name": "一般风险准备",
+        "descp": ""
+      },
+      {
+        "field_name": "wfplr",
+        "data_type": "float",
+        "description": "未分配利润",
+        "name": "未分配利润",
+        "descp": ""
+      },
+      {
+        "field_name": "wbbzbzhc",
+        "data_type": "float",
+        "description": "外币报表折算差额",
+        "name": "外币报表折算差额",
+        "descp": ""
+      },
+      {
+        "field_name": "gsmgdqsyhj",
+        "data_type": "float",
+        "description": "归属于母公司股东权益合计",
+        "name": "归属于母公司股东权益合计",
+        "descp": ""
+      },
+      {
+        "field_name": "ssgdqy",
+        "data_type": "float",
+        "description": "少数股东权益",
+        "name": "少数股东权益",
+        "descp": ""
+      },
+      {
+        "field_name": "syzqyhj",
+        "data_type": "float",
+        "description": "所有者权益合计",
+        "name": "所有者权益合计",
+        "descp": ""
+      },
+      {
+        "field_name": "fzhgdqyzj",
+        "data_type": "float",
+        "description": "负债和股东权益总计",
+        "name": "负债和股东权益总计",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "利润表",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/income/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取利润表，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "plrq",
+        "data_type": "string",
+        "description": "披露日期",
+        "name": "披露日期",
+        "descp": ""
+      },
+      {
+        "field_name": "yysr",
+        "data_type": "float",
+        "description": "营业收入",
+        "name": "营业收入",
+        "descp": ""
+      },
+      {
+        "field_name": "yzbf",
+        "data_type": "float",
+        "description": "已赚保费",
+        "name": "已赚保费",
+        "descp": ""
+      },
+      {
+        "field_name": "fdczssr",
+        "data_type": "float",
+        "description": "房地产销售收入",
+        "name": "房地产销售收入",
+        "descp": ""
+      },
+      {
+        "field_name": "yyzcb",
+        "data_type": "float",
+        "description": "营业总成本",
+        "name": "营业总成本",
+        "descp": ""
+      },
+      {
+        "field_name": "fdczscb",
+        "data_type": "float",
+        "description": "房地产销售成本",
+        "name": "房地产销售成本",
+        "descp": ""
+      },
+      {
+        "field_name": "yffy",
+        "data_type": "float",
+        "description": "研发费用",
+        "name": "研发费用",
+        "descp": ""
+      },
+      {
+        "field_name": "tbj",
+        "data_type": "float",
+        "description": "退保金",
+        "name": "退保金",
+        "descp": ""
+      },
+      {
+        "field_name": "pczjje",
+        "data_type": "float",
+        "description": "赔付支出净额",
+        "name": "赔付支出净额",
+        "descp": ""
+      },
+      {
+        "field_name": "tqbxhtzbjje",
+        "data_type": "float",
+        "description": "提取保险合同准备金净额",
+        "name": "提取保险合同准备金净额",
+        "descp": ""
+      },
+      {
+        "field_name": "bdhlzc",
+        "data_type": "float",
+        "description": "保单红利支出",
+        "name": "保单红利支出",
+        "descp": ""
+      },
+      {
+        "field_name": "fbfy",
+        "data_type": "float",
+        "description": "分保费用",
+        "name": "分保费用",
+        "descp": ""
+      },
+      {
+        "field_name": "gyjzbdsy",
+        "data_type": "float",
+        "description": "公允价值变动收益",
+        "name": "公允价值变动收益",
+        "descp": ""
+      },
+      {
+        "field_name": "qhsy",
+        "data_type": "float",
+        "description": "期货损益",
+        "name": "期货损益",
+        "descp": ""
+      },
+      {
+        "field_name": "tgsy",
+        "data_type": "float",
+        "description": "托管收益",
+        "name": "托管收益",
+        "descp": ""
+      },
+      {
+        "field_name": "btsr",
+        "data_type": "float",
+        "description": "补贴收入",
+        "name": "补贴收入",
+        "descp": ""
+      },
+      {
+        "field_name": "qtywlr",
+        "data_type": "float",
+        "description": "其他业务利润",
+        "name": "其他业务利润",
+        "descp": ""
+      },
+      {
+        "field_name": "bhbfzhbqsljlr",
+        "data_type": "float",
+        "description": "被合并方在合并前实现净利润",
+        "name": "被合并方在合并前实现净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "lxsr",
+        "data_type": "float",
+        "description": "利息收入",
+        "name": "利息收入",
+        "descp": ""
+      },
+      {
+        "field_name": "sxfjyjsr",
+        "data_type": "float",
+        "description": "手续费及佣金收入",
+        "name": "手续费及佣金收入",
+        "descp": ""
+      },
+      {
+        "field_name": "sxfjyjzc",
+        "data_type": "float",
+        "description": "手续费及佣金支出",
+        "name": "手续费及佣金支出",
+        "descp": ""
+      },
+      {
+        "field_name": "qtywcb",
+        "data_type": "float",
+        "description": "其他业务成本",
+        "name": "其他业务成本",
+        "descp": ""
+      },
+      {
+        "field_name": "hdsy",
+        "data_type": "float",
+        "description": "汇兑收益",
+        "name": "汇兑收益",
+        "descp": ""
+      },
+      {
+        "field_name": "fldzcczsy",
+        "data_type": "float",
+        "description": "非流动资产处置收益",
+        "name": "非流动资产处置收益",
+        "descp": ""
+      },
+      {
+        "field_name": "sdsfy",
+        "data_type": "float",
+        "description": "所得税费用",
+        "name": "所得税费用",
+        "descp": ""
+      },
+      {
+        "field_name": "wqrtzss",
+        "data_type": "float",
+        "description": "未确认投资损失",
+        "name": "未确认投资损失",
+        "descp": ""
+      },
+      {
+        "field_name": "gsmgsyzzdjlr",
+        "data_type": "float",
+        "description": "归属于母公司所有者的净利润",
+        "name": "归属于母公司所有者的净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "lxzc",
+        "data_type": "float",
+        "description": "利息支出",
+        "name": "利息支出",
+        "descp": ""
+      },
+      {
+        "field_name": "qtywsr",
+        "data_type": "float",
+        "description": "其他业务收入",
+        "name": "其他业务收入",
+        "descp": ""
+      },
+      {
+        "field_name": "yyzsr",
+        "data_type": "float",
+        "description": "营业总收入",
+        "name": "营业总收入",
+        "descp": ""
+      },
+      {
+        "field_name": "yycb",
+        "data_type": "float",
+        "description": "营业成本",
+        "name": "营业成本",
+        "descp": ""
+      },
+      {
+        "field_name": "yysjjfj",
+        "data_type": "float",
+        "description": "营业税金及附加",
+        "name": "营业税金及附加",
+        "descp": ""
+      },
+      {
+        "field_name": "xsfy",
+        "data_type": "float",
+        "description": "销售费用",
+        "name": "销售费用",
+        "descp": ""
+      },
+      {
+        "field_name": "glfy",
+        "data_type": "float",
+        "description": "管理费用",
+        "name": "管理费用",
+        "descp": ""
+      },
+      {
+        "field_name": "cwfy",
+        "data_type": "float",
+        "description": "财务费用",
+        "name": "财务费用",
+        "descp": ""
+      },
+      {
+        "field_name": "zcjzss",
+        "data_type": "float",
+        "description": "资产减值损失",
+        "name": "资产减值损失",
+        "descp": ""
+      },
+      {
+        "field_name": "tzsy",
+        "data_type": "float",
+        "description": "投资收益",
+        "name": "投资收益",
+        "descp": ""
+      },
+      {
+        "field_name": "lyqyhhhqydtzsy",
+        "data_type": "float",
+        "description": "联营企业和合营企业的投资收益",
+        "name": "联营企业和合营企业的投资收益",
+        "descp": ""
+      },
+      {
+        "field_name": "yylr",
+        "data_type": "float",
+        "description": "营业利润",
+        "name": "营业利润",
+        "descp": ""
+      },
+      {
+        "field_name": "ywsr",
+        "data_type": "float",
+        "description": "营业外收入",
+        "name": "营业外收入",
+        "descp": ""
+      },
+      {
+        "field_name": "ywzc",
+        "data_type": "float",
+        "description": "营业外支出",
+        "name": "营业外支出",
+        "descp": ""
+      },
+      {
+        "field_name": "lrze",
+        "data_type": "float",
+        "description": "利润总额",
+        "name": "利润总额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlr",
+        "data_type": "float",
+        "description": "净利润",
+        "name": "净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrhfcjcx",
+        "data_type": "float",
+        "description": "净利润(扣除非经常性损益后)",
+        "name": "净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "ssgdsy",
+        "data_type": "float",
+        "description": "少数股东损益",
+        "name": "少数股东损益",
+        "descp": ""
+      },
+      {
+        "field_name": "jbmgsy",
+        "data_type": "float",
+        "description": "基本每股收益",
+        "name": "基本每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "xsmgsy",
+        "data_type": "float",
+        "description": "稀释每股收益",
+        "name": "稀释每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "zhsyz",
+        "data_type": "float",
+        "description": "综合收益总额",
+        "name": "综合收益总额",
+        "descp": ""
+      },
+      {
+        "field_name": "gsssgdzhsyz",
+        "data_type": "float",
+        "description": "归属于少数股东的综合收益总额",
+        "name": "归属于少数股东的综合收益总额",
+        "descp": ""
+      },
+      {
+        "field_name": "qtsy",
+        "data_type": "float",
+        "description": "其他收益",
+        "name": "其他收益",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "现金流量表",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/cashflow/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取现金流量表，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "plrq",
+        "data_type": "string",
+        "description": "披露日期",
+        "name": "披露日期",
+        "descp": ""
+      },
+      {
+        "field_name": "sdydbxbfqdxj",
+        "data_type": "float",
+        "description": "收到原保险合同保费取得的现金",
+        "name": "收到原保险合同保费取得的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "sdzbxywxjjje",
+        "data_type": "float",
+        "description": "收到再保险业务现金净额",
+        "name": "收到再保险业务现金净额",
+        "descp": ""
+      },
+      {
+        "field_name": "bhcjjtkkjzje",
+        "data_type": "float",
+        "description": "保户储金及投资款净增加额",
+        "name": "保户储金及投资款净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "czjyxjrzcjzje",
+        "data_type": "float",
+        "description": "处置交易性金融资产净增加额",
+        "name": "处置交易性金融资产净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "sqlxsxfjyjdxj",
+        "data_type": "float",
+        "description": "收取利息、手续费及佣金的现金",
+        "name": "收取利息、手续费及佣金的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "hgywzjjzje",
+        "data_type": "float",
+        "description": "回购业务资金净增加额",
+        "name": "回购业务资金净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "zfybxhtpfkxdj",
+        "data_type": "float",
+        "description": "支付原保险合同赔付款项的现金",
+        "name": "支付原保险合同赔付款项的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "zfbdhldxj",
+        "data_type": "float",
+        "description": "支付保单红利的现金",
+        "name": "支付保单红利的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "czfzgsjqtsddxj",
+        "data_type": "float",
+        "description": "处置子公司及其他收到的现金",
+        "name": "处置子公司及其他收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "jszyhdqckssddxj",
+        "data_type": "float",
+        "description": "减少质押和定期存款所收到的现金",
+        "name": "减少质押和定期存款所收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "tzszfdxj",
+        "data_type": "float",
+        "description": "投资所支付的现金",
+        "name": "投资所支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "zydkjzje",
+        "data_type": "float",
+        "description": "质押贷款净增加额",
+        "name": "质押贷款净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "qdfzgsjqtywdwzfdxjje",
+        "data_type": "float",
+        "description": "取得子公司及其他营业单位支付的现金净额",
+        "name": "取得子公司及其他营业单位支付的现金净额",
+        "descp": ""
+      },
+      {
+        "field_name": "zjzyhdqckszfdxj",
+        "data_type": "float",
+        "description": "增加质押和定期存款所支付的现金",
+        "name": "增加质押和定期存款所支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "qzfzgsxrxj",
+        "data_type": "float",
+        "description": "其中子公司吸收现金",
+        "name": "其中子公司吸收现金",
+        "descp": ""
+      },
+      {
+        "field_name": "qz:fzgszfgsssgdglr",
+        "data_type": "float",
+        "description": "其中:子公司支付给少数股东的股利、利润",
+        "name": "其中:子公司支付给少数股东的股利、利润",
+        "descp": ""
+      },
+      {
+        "field_name": "ssgdsy",
+        "data_type": "float",
+        "description": "少数股东损益",
+        "name": "少数股东损益",
+        "descp": ""
+      },
+      {
+        "field_name": "wqrdtzss",
+        "data_type": "float",
+        "description": "未确认的投资损失",
+        "name": "未确认的投资损失",
+        "descp": ""
+      },
+      {
+        "field_name": "dysyzj(j:js)",
+        "data_type": "float",
+        "description": "递延收益增加(减:减少)",
+        "name": "递延收益增加",
+        "descp": ""
+      },
+      {
+        "field_name": "yjfz",
+        "data_type": "float",
+        "description": "预计负债",
+        "name": "预计负债",
+        "descp": ""
+      },
+      {
+        "field_name": "jxyyfxmdzj",
+        "data_type": "float",
+        "description": "经营性应付项目的增加",
+        "name": "经营性应付项目的增加",
+        "descp": ""
+      },
+      {
+        "field_name": "ywgwswjskdjs(j:zj)",
+        "data_type": "float",
+        "description": "已完工尚未结算款的减少(减:增加)",
+        "name": "已完工尚未结算款的减少",
+        "descp": ""
+      },
+      {
+        "field_name": "yjswgwgdjz(j:js)",
+        "data_type": "float",
+        "description": "已结算尚未完工款的增加(减:减少)",
+        "name": "已结算尚未完工款的增加",
+        "descp": ""
+      },
+      {
+        "field_name": "xssptglwsddxj",
+        "data_type": "float",
+        "description": "销售商品、提供劳务收到的现金",
+        "name": "销售商品、提供劳务收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "khckhtyckxkjzje",
+        "data_type": "float",
+        "description": "客户存款和同业存放款项净增加额",
+        "name": "客户存款和同业存放款项净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "xzyhyhkjzje",
+        "data_type": "float",
+        "description": "向中央银行借款净增加额(万元)",
+        "name": "向中央银行借款净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "xtjrgjqjcrzjjzje",
+        "data_type": "float",
+        "description": "向其他金融机构拆入资金净增加额",
+        "name": "向其他金融机构拆入资金净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "sddsfyfh",
+        "data_type": "float",
+        "description": "收到的税费与返还",
+        "name": "收到的税费与返还",
+        "descp": ""
+      },
+      {
+        "field_name": "tzzfdxj",
+        "data_type": "float",
+        "description": "投资支付的现金",
+        "name": "投资支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "sdqtyjyghdxj",
+        "data_type": "float",
+        "description": "收到的其他与经营活动有关的现金",
+        "name": "收到的其他与经营活动有关的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "jyhdxjlrxj",
+        "data_type": "float",
+        "description": "经营活动现金流入小计",
+        "name": "经营活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "gmspjslwzfdxj",
+        "data_type": "float",
+        "description": "购买商品、接受劳务支付的现金",
+        "name": "购买商品、接受劳务支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "khdkjdknzje",
+        "data_type": "float",
+        "description": "客户贷款及垫款净增加额",
+        "name": "客户贷款及垫款净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "cfzyxhytckxkjzje",
+        "data_type": "float",
+        "description": "存放中央银行和同业款项净增加额",
+        "name": "存放中央银行和同业款项净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "zflxsxfjyjdxj",
+        "data_type": "float",
+        "description": "支付利息、手续费及佣金的现金",
+        "name": "支付利息、手续费及佣金的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "zfgzyjwzgzfdxj",
+        "data_type": "float",
+        "description": "支付给职工以及为职工支付的现金",
+        "name": "支付给职工以及为职工支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "zfdgxsf",
+        "data_type": "float",
+        "description": "支付的各项税费",
+        "name": "支付的各项税费",
+        "descp": ""
+      },
+      {
+        "field_name": "zfqtyjyghdxj",
+        "data_type": "float",
+        "description": "支付其他与经营活动有关的现金",
+        "name": "支付其他与经营活动有关的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "jyhdxjlcxj",
+        "data_type": "float",
+        "description": "经营活动现金流出小计",
+        "name": "经营活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "jyhdcsdxjlje",
+        "data_type": "float",
+        "description": "经营活动产生的现金流量净额",
+        "name": "经营活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "shtzssddxj",
+        "data_type": "float",
+        "description": "收回投资所收到的现金",
+        "name": "收回投资所收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "qdtzsysddxj",
+        "data_type": "float",
+        "description": "取得投资收益所收到的现金",
+        "name": "取得投资收益所收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "czgdzcwxzhqtqctzssddxj",
+        "data_type": "float",
+        "description": "处置固定资产、无形资产和其他长期投资收到的现金",
+        "name": "处置固定资产、无形资产和其他长期投资收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "sdqtytzghdxj",
+        "data_type": "float",
+        "description": "收到的其他与投资活动有关的现金",
+        "name": "收到的其他与投资活动有关的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "tzhdxjlrxj",
+        "data_type": "float",
+        "description": "投资活动现金流入小计",
+        "name": "投资活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "gjgdzcwxzhqtqctzzfdxj",
+        "data_type": "float",
+        "description": "购建固定资产、无形资产和其他长期投资支付的现金",
+        "name": "购建固定资产、无形资产和其他长期投资支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "tzhdxjlcxj",
+        "data_type": "float",
+        "description": "投资活动现金流出小计",
+        "name": "投资活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "tzhdcsdxjlxj",
+        "data_type": "float",
+        "description": "投资活动产生的现金流量净额",
+        "name": "投资活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "xstzsdj",
+        "data_type": "float",
+        "description": "吸收投资收到的现金",
+        "name": "吸收投资收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "qdjkjddxj",
+        "data_type": "float",
+        "description": "取得借款收到的现金",
+        "name": "取得借款收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "fxzjsddxj",
+        "data_type": "float",
+        "description": "发行债券收到的现金",
+        "name": "发行债券收到的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "sdqtczghdxj",
+        "data_type": "float",
+        "description": "收到其他与筹资活动有关的现金",
+        "name": "收到其他与筹资活动有关的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "czhdxjlrxj",
+        "data_type": "float",
+        "description": "筹资活动现金流入小计",
+        "name": "筹资活动现金流入小计",
+        "descp": ""
+      },
+      {
+        "field_name": "chzwzfxj",
+        "data_type": "float",
+        "description": "偿还债务支付现金",
+        "name": "偿还债务支付现金",
+        "descp": ""
+      },
+      {
+        "field_name": "fpglrlhcllxzfdxj",
+        "data_type": "float",
+        "description": "分配股利、利润或偿付利息支付的现金",
+        "name": "分配股利、利润或偿付利息支付的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "zfqtczdxj",
+        "data_type": "float",
+        "description": "支付其他与筹资的现金",
+        "name": "支付其他与筹资的现金",
+        "descp": ""
+      },
+      {
+        "field_name": "czhdxjlcxj",
+        "data_type": "float",
+        "description": "筹资活动现金流出小计",
+        "name": "筹资活动现金流出小计",
+        "descp": ""
+      },
+      {
+        "field_name": "czhdcsdxjlxj",
+        "data_type": "float",
+        "description": "筹资活动产生的现金流量净额",
+        "name": "筹资活动产生的现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "hlbddxjdxy",
+        "data_type": "float",
+        "description": "汇率变动对现金的影响",
+        "name": "汇率变动对现金的影响",
+        "descp": ""
+      },
+      {
+        "field_name": "xjxjdhwjzje",
+        "data_type": "float",
+        "description": "现金及现金等价物净增加额",
+        "name": "现金及现金等价物净增加额",
+        "descp": ""
+      },
+      {
+        "field_name": "qcxjjxjdhwye",
+        "data_type": "float",
+        "description": "期初现金及现金等价物余额",
+        "name": "期初现金及现金等价物余额",
+        "descp": ""
+      },
+      {
+        "field_name": "qmxjjxjdhwye",
+        "data_type": "float",
+        "description": "期末现金及现金等价物余额",
+        "name": "期末现金及现金等价物余额",
+        "descp": ""
+      },
+      {
+        "field_name": "jlr",
+        "data_type": "float",
+        "description": "净利润",
+        "name": "净利润",
+        "descp": ""
+      },
+      {
+        "field_name": "zcjzzb",
+        "data_type": "float",
+        "description": "资产减值准备",
+        "name": "资产减值准备",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzczjyqzcshscxwzczj",
+        "data_type": "float",
+        "description": "固定资产折旧、油气资产折耗、生产性物资折旧",
+        "name": "固定资产折旧、油气资产折耗、生产性物资折旧",
+        "descp": ""
+      },
+      {
+        "field_name": "wxzctx",
+        "data_type": "float",
+        "description": "无形资产摊销",
+        "name": "无形资产摊销",
+        "descp": ""
+      },
+      {
+        "field_name": "cqdtfytx",
+        "data_type": "float",
+        "description": "长期待摊费用摊销",
+        "name": "长期待摊费用摊销",
+        "descp": ""
+      },
+      {
+        "field_name": "dtfydjs",
+        "data_type": "float",
+        "description": "待摊费用的减少",
+        "name": "待摊费用的减少",
+        "descp": ""
+      },
+      {
+        "field_name": "ytfydzj",
+        "data_type": "float",
+        "description": "预提费用的增加",
+        "name": "预提费用的增加",
+        "descp": ""
+      },
+      {
+        "field_name": "czgdzcwxzhqtqctzss",
+        "data_type": "float",
+        "description": "处置固定资产、无形资产和其他长期资产的损失",
+        "name": "处置固定资产、无形资产和其他长期资产的损失",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzcgbss",
+        "data_type": "float",
+        "description": "固定资产报废损失",
+        "name": "固定资产报废损失",
+        "descp": ""
+      },
+      {
+        "field_name": "gyjzbds",
+        "data_type": "float",
+        "description": "公允价值变动损失",
+        "name": "公允价值变动损失",
+        "descp": ""
+      },
+      {
+        "field_name": "cwfy",
+        "data_type": "float",
+        "description": "财务费用",
+        "name": "财务费用",
+        "descp": ""
+      },
+      {
+        "field_name": "tzss",
+        "data_type": "float",
+        "description": "投资损失",
+        "name": "投资损失",
+        "descp": ""
+      },
+      {
+        "field_name": "dysdszcjs",
+        "data_type": "float",
+        "description": "递延所得税资产减少",
+        "name": "递延所得税资产减少",
+        "descp": ""
+      },
+      {
+        "field_name": "dysdsfzzj",
+        "data_type": "float",
+        "description": "递延所得税负债增加",
+        "name": "递延所得税负债增加",
+        "descp": ""
+      },
+      {
+        "field_name": "chdjs",
+        "data_type": "float",
+        "description": "存货的减少",
+        "name": "存货的减少",
+        "descp": ""
+      },
+      {
+        "field_name": "jxyysxmdjs",
+        "data_type": "float",
+        "description": "经营性应收项目的减少",
+        "name": "经营性应收项目的减少",
+        "descp": ""
+      },
+      {
+        "field_name": "qt",
+        "data_type": "float",
+        "description": "其他",
+        "name": "其他",
+        "descp": ""
+      },
+      {
+        "field_name": "jyhdcsdxjlxj",
+        "data_type": "float",
+        "description": "经营活动产生现金流量净额",
+        "name": "经营活动产生现金流量净额",
+        "descp": ""
+      },
+      {
+        "field_name": "zwzwzb",
+        "data_type": "float",
+        "description": "债务转为资本",
+        "name": "债务转为资本",
+        "descp": ""
+      },
+      {
+        "field_name": "ynndqdkzhgzq",
+        "data_type": "float",
+        "description": "一年内到期的可转换公司债券",
+        "name": "一年内到期的可转换公司债券",
+        "descp": ""
+      },
+      {
+        "field_name": "rzrgdzc",
+        "data_type": "float",
+        "description": "融资租入固定资产",
+        "name": "融资租入固定资产",
+        "descp": ""
+      },
+      {
+        "field_name": "xjdqmye",
+        "data_type": "float",
+        "description": "现金的期末余额",
+        "name": "现金的期末余额",
+        "descp": ""
+      },
+      {
+        "field_name": "xjdqcye",
+        "data_type": "float",
+        "description": "现金的期初余额",
+        "name": "现金的期初余额",
+        "descp": ""
+      },
+      {
+        "field_name": "xjdhwdqmye",
+        "data_type": "float",
+        "description": "现金等价物的期末余额",
+        "name": "现金等价物的期末余额",
+        "descp": ""
+      },
+      {
+        "field_name": "xjdhwdqcye",
+        "data_type": "float",
+        "description": "现金等价物的期初余额",
+        "name": "现金等价物的期初余额",
+        "descp": ""
+      },
+      {
+        "field_name": "xjxjdhwdjzje",
+        "data_type": "float",
+        "description": "现金及现金等价物的净增加额",
+        "name": "现金及现金等价物的净增加额",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "财务主要指标",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/pershareindex/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取财务主要指标，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "plrq",
+        "data_type": "string",
+        "description": "披露日期",
+        "name": "披露日期",
+        "descp": ""
+      },
+      {
+        "field_name": "mgjyhdxjl",
+        "data_type": "float",
+        "description": "每股经营活动现金流量",
+        "name": "每股经营活动现金流量",
+        "descp": ""
+      },
+      {
+        "field_name": "mgjzc",
+        "data_type": "float",
+        "description": "每股净资产",
+        "name": "每股净资产",
+        "descp": ""
+      },
+      {
+        "field_name": "jbmgsy",
+        "data_type": "float",
+        "description": "基本每股收益",
+        "name": "基本每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "xsmgsy",
+        "data_type": "float",
+        "description": "稀释每股收益",
+        "name": "稀释每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "mgwfplr",
+        "data_type": "float",
+        "description": "每股未分配利润",
+        "name": "每股未分配利润",
+        "descp": ""
+      },
+      {
+        "field_name": "mgzbgjj",
+        "data_type": "float",
+        "description": "每股资本公积金",
+        "name": "每股资本公积金",
+        "descp": ""
+      },
+      {
+        "field_name": "kfmgsy",
+        "data_type": "float",
+        "description": "扣非每股收益",
+        "name": "扣非每股收益",
+        "descp": ""
+      },
+      {
+        "field_name": "jzcsyl",
+        "data_type": "float",
+        "description": "净资产收益率",
+        "name": "净资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "xsmlv",
+        "data_type": "float",
+        "description": "销售毛利率",
+        "name": "销售毛利率",
+        "descp": ""
+      },
+      {
+        "field_name": "zyyrsrzz",
+        "data_type": "float",
+        "description": "主营收入同比增长",
+        "name": "主营收入同比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "jlrzz",
+        "data_type": "float",
+        "description": "净利润同比增长",
+        "name": "净利润同比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "gsmgsyzzdjlrzz",
+        "data_type": "float",
+        "description": "归属于母公司所有者的净利润同比增长",
+        "name": "归属于母公司所有者的净利润同比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "kfjlrzz",
+        "data_type": "float",
+        "description": "扣非净利润同比增长",
+        "name": "扣非净利润同比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "yyzsrgdhbzz",
+        "data_type": "float",
+        "description": "营业总收入滚动环比增长",
+        "name": "营业总收入滚动环比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "sljlrjqhbzz",
+        "data_type": "float",
+        "description": "归属净利润滚动环比增长",
+        "name": "归属净利润滚动环比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "kfjlrgdhbzz",
+        "data_type": "float",
+        "description": "扣非净利润滚动环比增长",
+        "name": "扣非净利润滚动环比增长",
+        "descp": ""
+      },
+      {
+        "field_name": "jqjzcsyl",
+        "data_type": "float",
+        "description": "加权净资产收益率",
+        "name": "加权净资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "tbjzcsyl",
+        "data_type": "float",
+        "description": "摊薄净资产收益率",
+        "name": "摊薄净资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "tbzzcsyl",
+        "data_type": "float",
+        "description": "摊薄总资产收益率",
+        "name": "摊薄总资产收益率",
+        "descp": ""
+      },
+      {
+        "field_name": "mlv",
+        "data_type": "float",
+        "description": "毛利率",
+        "name": "毛利率",
+        "descp": ""
+      },
+      {
+        "field_name": "jlv",
+        "data_type": "float",
+        "description": "净利率",
+        "name": "净利率",
+        "descp": ""
+      },
+      {
+        "field_name": "sjslv",
+        "data_type": "float",
+        "description": "实际税率",
+        "name": "实际税率",
+        "descp": ""
+      },
+      {
+        "field_name": "yskyysr",
+        "data_type": "float",
+        "description": "预收款营业收入",
+        "name": "预收款营业收入",
+        "descp": ""
+      },
+      {
+        "field_name": "xsxjlyysr",
+        "data_type": "float",
+        "description": "销售现金流营业收入",
+        "name": "销售现金流营业收入",
+        "descp": ""
+      },
+      {
+        "field_name": "zcfzl",
+        "data_type": "float",
+        "description": "资产负债比率",
+        "name": "资产负债比率",
+        "descp": ""
+      },
+      {
+        "field_name": "chzzl",
+        "data_type": "float",
+        "description": "存货周转率",
+        "name": "存货周转率",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "公司股本表",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/capital/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取公司股本表，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "zgb",
+        "data_type": "float",
+        "description": "总股本",
+        "name": "总股本",
+        "descp": ""
+      },
+      {
+        "field_name": "ysltag",
+        "data_type": "float",
+        "description": "已上市流通A股",
+        "name": "已上市流通A股",
+        "descp": ""
+      },
+      {
+        "field_name": "xsltgf",
+        "data_type": "float",
+        "description": "限售流通股份",
+        "name": "限售流通股份",
+        "descp": ""
+      },
+      {
+        "field_name": "bdrq",
+        "data_type": "string",
+        "description": "变动日期",
+        "name": "变动日期",
+        "descp": ""
+      },
+      {
+        "field_name": "ggr",
+        "data_type": "string",
+        "description": "公告日",
+        "name": "公告日",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "公司十大股东",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/topholder/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取公司十大股东，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "ggrq",
+        "data_type": "string",
+        "description": "公告日期",
+        "name": "公告日期",
+        "descp": ""
+      },
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "gdmc",
+        "data_type": "string",
+        "description": "股东名称",
+        "name": "股东名称",
+        "descp": ""
+      },
+      {
+        "field_name": "gdlx",
+        "data_type": "string",
+        "description": "股东类型",
+        "name": "股东类型",
+        "descp": ""
+      },
+      {
+        "field_name": "cgsl",
+        "data_type": "string",
+        "description": "持股数量",
+        "name": "持股数量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdyy",
+        "data_type": "string",
+        "description": "变动原因",
+        "name": "变动原因",
+        "descp": ""
+      },
+      {
+        "field_name": "cgbl",
+        "data_type": "string",
+        "description": "持股比例",
+        "name": "持股比例",
+        "descp": ""
+      },
+      {
+        "field_name": "gfxz",
+        "data_type": "string",
+        "description": "股份性质",
+        "name": "股份性质",
+        "descp": ""
+      },
+      {
+        "field_name": "cgpm",
+        "data_type": "string",
+        "description": "持股排名",
+        "name": "持股排名",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "公司十大流通股东",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/flowholder/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取公司十大流通股东，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "ggrq",
+        "data_type": "string",
+        "description": "公告日期",
+        "name": "公告日期",
+        "descp": ""
+      },
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "gdmc",
+        "data_type": "string",
+        "description": "股东名称",
+        "name": "股东名称",
+        "descp": ""
+      },
+      {
+        "field_name": "gdlx",
+        "data_type": "string",
+        "description": "股东类型",
+        "name": "股东类型",
+        "descp": ""
+      },
+      {
+        "field_name": "cgsl",
+        "data_type": "string",
+        "description": "持股数量",
+        "name": "持股数量",
+        "descp": ""
+      },
+      {
+        "field_name": "bdyy",
+        "data_type": "string",
+        "description": "变动原因",
+        "name": "变动原因",
+        "descp": ""
+      },
+      {
+        "field_name": "cgbl",
+        "data_type": "string",
+        "description": "持股比例",
+        "name": "持股比例",
+        "descp": ""
+      },
+      {
+        "field_name": "gfxz",
+        "data_type": "string",
+        "description": "股份性质",
+        "name": "股份性质",
+        "descp": ""
+      },
+      {
+        "field_name": "cgpm",
+        "data_type": "string",
+        "description": "持股排名",
+        "name": "持股排名",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "公司股东数",
+    "api_url": "http://api.biyingapi.com/hsstock/financial/hm/600519.SH/biyinglicence?st=20230330&et=20230630",
+    "api_description": "根据《股票列表》得到的股票代码获取公司股东数，开始时间以及结束时间的格式均为 YYYYMMDD，例如：'20240101'。不设置开始时间和结束时间则为全部数据。",
+    "update_frequency": "每日0点",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "jzrq",
+        "data_type": "string",
+        "description": "截止日期",
+        "name": "截止日期",
+        "descp": ""
+      },
+      {
+        "field_name": "gdzs",
+        "data_type": "string",
+        "description": "股东总数",
+        "name": "股东总数",
+        "descp": ""
+      },
+      {
+        "field_name": "agdhs",
+        "data_type": "string",
+        "description": "A股东户数",
+        "name": "A股东户数",
+        "descp": ""
+      },
+      {
+        "field_name": "bgdhs",
+        "data_type": "string",
+        "description": "B股东户数",
+        "name": "B股东户数",
+        "descp": ""
+      },
+      {
+        "field_name": "hgdhs",
+        "data_type": "string",
+        "description": "H股东户数",
+        "name": "H股东户数",
+        "descp": ""
+      },
+      {
+        "field_name": "yltgdhs",
+        "data_type": "string",
+        "description": "已流通股东户数",
+        "name": "已流通股东户数",
+        "descp": ""
+      },
+      {
+        "field_name": "wltgdhs",
+        "data_type": "string",
+        "description": "未流通股东户数",
+        "name": "未流通股东户数",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "历史分时MACD",
+    "api_url": "http://api.biyingapi.com/hsstock/history/macd/000001.SZ/d/n/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取历史MACD数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，日线以上除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级仅限请求不复权数据，对应的参数为n。开始时间以及结束时间的格式均为 YYYYMMDD 或 YYYYMMDDhhmmss，例如：'20240101' 或'20241231235959'。不设置开始时间和结束时间则为全部历史数据。同时可以指定获取数据条数，例如指定lt=10，则获取最新的10条数据。",
+    "update_frequency": "分钟级别数据盘中更新，分时越小越优先更新，如5分钟级别会每5分钟更新，15分钟级别会每15分钟更新，以此类推，日线及以上级别每日15:35更新",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间，短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd",
+        "name": "交易时间",
+        "descp": "短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd"
+      },
+      {
+        "field_name": "diff",
+        "data_type": "number",
+        "description": "DIFF值",
+        "name": "DIFF值",
+        "descp": ""
+      },
+      {
+        "field_name": "dea",
+        "data_type": "number",
+        "description": "DEA值",
+        "name": "DEA值",
+        "descp": ""
+      },
+      {
+        "field_name": "macd",
+        "data_type": "number",
+        "description": "MACD值",
+        "name": "MACD值",
+        "descp": ""
+      },
+      {
+        "field_name": "ema12",
+        "data_type": "number",
+        "description": "EMA（12）值",
+        "name": "EMA",
+        "descp": "值"
+      },
+      {
+        "field_name": "ema26",
+        "data_type": "number",
+        "description": "EMA（26）值",
+        "name": "EMA",
+        "descp": "值"
+      }
+    ]
+  },
+  {
+    "api_name": "历史分时MA",
+    "api_url": "http://api.biyingapi.com/hsstock/history/ma/000001.SZ/d/n/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取历史MA数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，日线以上除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级仅限请求不复权数据，对应的参数为n。开始时间以及结束时间的格式均为 YYYYMMDD 或 YYYYMMDDhhmmss，例如：'20240101' 或'20241231235959'。不设置开始时间和结束时间则为全部历史数据。同时可以指定获取数据条数，例如指定lt=10，则获取最新的10条数据。",
+    "update_frequency": "分钟级别数据盘中更新，分时越小越优先更新，如5分钟级别会每5分钟更新，15分钟级别会每15分钟更新，以此类推，日线及以上级别每日15:35更新",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间，短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd",
+        "name": "交易时间",
+        "descp": "短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd"
+      },
+      {
+        "field_name": "ma3",
+        "data_type": "number",
+        "description": "MA3，没有则为null",
+        "name": "MA3",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma5",
+        "data_type": "number",
+        "description": "MA5，没有则为null",
+        "name": "MA5",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma10",
+        "data_type": "number",
+        "description": "MA10，没有则为null",
+        "name": "MA10",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma15",
+        "data_type": "number",
+        "description": "MA15，没有则为null",
+        "name": "MA15",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma20",
+        "data_type": "number",
+        "description": "MA20，没有则为null",
+        "name": "MA20",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma30",
+        "data_type": "number",
+        "description": "MA30，没有则为null",
+        "name": "MA30",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma60",
+        "data_type": "number",
+        "description": "MA60，没有则为null",
+        "name": "MA60",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma120",
+        "data_type": "number",
+        "description": "MA120，没有则为null",
+        "name": "MA120",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma200",
+        "data_type": "number",
+        "description": "MA200，没有则为null",
+        "name": "MA200",
+        "descp": "没有则为null"
+      },
+      {
+        "field_name": "ma250",
+        "data_type": "number",
+        "description": "MA250，没有则为null",
+        "name": "MA250",
+        "descp": "没有则为null"
+      }
+    ]
+  },
+  {
+    "api_name": "历史分时BOLL",
+    "api_url": "http://api.biyingapi.com/hsstock/history/boll/000001.SZ/d/n/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取历史BOLL数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，日线以上除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级仅限请求不复权数据，对应的参数为n。开始时间以及结束时间的格式均为 YYYYMMDD 或 YYYYMMDDhhmmss，例如：'20240101' 或'20241231235959'。不设置开始时间和结束时间则为全部历史数据。同时可以指定获取数据条数，例如指定lt=10，则获取最新的10条数据。",
+    "update_frequency": "分钟级别数据盘中更新，分时越小越优先更新，如5分钟级别会每5分钟更新，15分钟级别会每15分钟更新，以此类推，日线及以上级别每日15:35更新",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间，短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd",
+        "name": "交易时间",
+        "descp": "短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd"
+      },
+      {
+        "field_name": "u",
+        "data_type": "number",
+        "description": "上轨",
+        "name": "上轨",
+        "descp": ""
+      },
+      {
+        "field_name": "d",
+        "data_type": "number",
+        "description": "下轨",
+        "name": "下轨",
+        "descp": ""
+      },
+      {
+        "field_name": "m",
+        "data_type": "number",
+        "description": "中轨",
+        "name": "中轨",
+        "descp": ""
+      }
+    ]
+  },
+  {
+    "api_name": "历史分时KDJ",
+    "api_url": "http://api.biyingapi.com/hsstock/history/kdj/000001.SZ/d/n/biyinglicence",
+    "api_description": "根据《股票列表》得到的股票代码和分时级别获取历史KDJ数据，交易时间升序。目前分时级别支持5分钟、15分钟、30分钟、60分钟、日线、周线、月线、年线，对应的请求参数分别为5、15、30、60、d、w、m、y，日线以上除权方式有不复权、前复权、后复权、等比前复权、等比后复权，对应的参数分别为n、f、b、fr、br，分钟级仅限请求不复权数据，对应的参数为n。开始时间以及结束时间的格式均为 YYYYMMDD 或 YYYYMMDDhhmmss，例如：'20240101' 或'20241231235959'。不设置开始时间和结束时间则为全部历史数据。同时可以指定获取数据条数，例如指定lt=10，则获取最新的10条数据。",
+    "update_frequency": "分钟级别数据盘中更新，分时越小越优先更新，如5分钟级别会每5分钟更新，15分钟级别会每15分钟更新，以此类推，日线及以上级别每日15:35更新",
+    "request_frequency": "1分钟300次 | 包年版1分钟3千次 | 白金版1分钟6千次",
+    "return_format": "标准Json格式      [{},...{}]",
+    "fields": [
+      {
+        "field_name": "t",
+        "data_type": "string",
+        "description": "交易时间，短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd",
+        "name": "交易时间",
+        "descp": "短分时级别格式为yyyy-MM-ddHH:mm:ss，日线级别为yyyy-MM-dd"
+      },
+      {
+        "field_name": "k",
+        "data_type": "number",
+        "description": "K值",
+        "name": "K值",
+        "descp": ""
+      },
+      {
+        "field_name": "d",
+        "data_type": "number",
+        "description": "D值",
+        "name": "D值",
+        "descp": ""
+      },
+      {
+        "field_name": "j",
+        "data_type": "number",
+        "description": "J值",
+        "name": "J值",
+        "descp": ""
+      }
+    ]
+  }
+]

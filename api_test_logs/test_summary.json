@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-10-26T20:29:48.733438",
+  "total_batches": 2,
+  "total_interfaces": 10,
+  "passed": 3,
+  "failed": 7,
+  "success_rate": 30.0,
+  "details": {
+    "get_hslt_list": {
+      "status": "PASSED",
+      "data": "[{'dm': '000001.SZ', 'mc': '平安银行', 'jys': 'SZ'}, {'dm': '000002.SZ', 'mc': '万 科Ａ', 'jys': 'SZ'}, {'d..."
+    },
+    "get_hslt_new": {
+      "status": "PASSED",
+      "data": "[{'zqdm': '920003', 'zqjc': '中诚咨询', 'sgdm': '920003', 'fxsl': 14000000, 'swfxsl': 12600000, 'sgsx': ..."
+    },
+    "get_hslt_ztgc": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hslt_dtgc": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hslt_qsgc": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hslt_cxgc": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hslt_zbgc": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hszg_list": {
+      "status": "PASSED",
+      "data": "[{'name': 'A股-申万行业-煤炭', 'code': 'sw_mt', 'type1': 0, 'type2': 0, 'level': 2, 'pcode': 'swhy', 'pname..."
+    },
+    "get_hszg_gg": {
+      "status": "FAILED",
+      "data": "返回None"
+    },
+    "get_hszg_zg": {
+      "status": "FAILED",
+      "data": "返回None"
+    }
+  }
+}
