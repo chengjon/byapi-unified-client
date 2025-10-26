@@ -1,0 +1,420 @@
+openapi: 3.0.0
+info:
+  title: Byapi Stock API Client
+  description: Unified Python client library for Byapi stock market data
+  version: 1.0.0
+  contact:
+    name: Project
+    url: https://github.com/iflow/byapi
+
+servers:
+  - url: http://api.biyingapi.com
+    description: Production Byapi server
+  - url: https://api.biyingapi.com
+    description: Production Byapi server (HTTPS)
+
+paths:
+  /stock_prices/latest/{code}:
+    get:
+      tags:
+        - Stock Prices
+      summary: Get latest stock price
+      operationId: get_latest_price
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{6}$'
+          example: "000001"
+      responses:
+        '200':
+          description: Latest stock price data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockQuote'
+        '400':
+          description: Invalid stock code format
+        '404':
+          description: Stock code not found
+        '429':
+          description: Rate limit exceeded
+
+  /stock_prices/historical/{code}:
+    get:
+      tags:
+        - Stock Prices
+      summary: Get historical stock prices
+      operationId: get_historical_prices
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Historical price data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockQuote'
+
+  /indicators/{code}:
+    get:
+      tags:
+        - Technical Indicators
+      summary: Get technical indicators
+      operationId: get_indicators
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Technical indicators
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TechnicalIndicator'
+
+  /financials/{code}:
+    get:
+      tags:
+        - Financial Data
+      summary: Get financial statements
+      operationId: get_financials
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: statement_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [balance_sheet, income_statement, cash_flow, all]
+            default: all
+      responses:
+        '200':
+          description: Financial data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialData'
+
+  /announcements/{code}:
+    get:
+      tags:
+        - Announcements
+      summary: Get company announcements
+      operationId: get_announcements
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of announcements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockAnnouncement'
+
+  /company_info/{code}:
+    get:
+      tags:
+        - Company Information
+      summary: Get company information
+      operationId: get_company_info
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Company information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyInfo'
+
+  /indices:
+    get:
+      tags:
+        - Market Indices
+      summary: Get all market indices
+      operationId: get_all_indices
+      responses:
+        '200':
+          description: List of market indices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarketIndex'
+
+  /batch:
+    post:
+      tags:
+        - Batch Operations
+      summary: Batch fetch data for multiple stocks
+      operationId: batch_fetch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                codes:
+                  type: array
+                  items:
+                    type: string
+                  example: ["000001", "000002"]
+                data_types:
+                  type: array
+                  items:
+                    type: string
+                  example: ["prices", "indicators"]
+      responses:
+        '200':
+          description: Batch data
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+components:
+  schemas:
+    StockQuote:
+      type: object
+      required:
+        - code
+        - name
+        - current_price
+        - timestamp
+      properties:
+        code:
+          type: string
+          description: Stock code (6 digits)
+        name:
+          type: string
+        current_price:
+          type: number
+          format: double
+          minimum: 0
+        previous_close:
+          type: number
+          format: double
+        daily_open:
+          type: number
+          format: double
+        daily_high:
+          type: number
+          format: double
+        daily_low:
+          type: number
+          format: double
+        volume:
+          type: integer
+          minimum: 0
+        change:
+          type: number
+          format: double
+        change_percent:
+          type: number
+          format: double
+        timestamp:
+          type: string
+          format: date-time
+
+    TechnicalIndicator:
+      type: object
+      properties:
+        code:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        ma_5:
+          type: number
+          format: double
+        ma_10:
+          type: number
+          format: double
+        ma_20:
+          type: number
+          format: double
+        ma_50:
+          type: number
+          format: double
+        ma_200:
+          type: number
+          format: double
+        rsi:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+        macd:
+          type: number
+          format: double
+        bollinger_upper:
+          type: number
+          format: double
+        bollinger_middle:
+          type: number
+          format: double
+        bollinger_lower:
+          type: number
+          format: double
+
+    FinancialData:
+      type: object
+      properties:
+        code:
+          type: string
+        balance_sheet:
+          $ref: '#/components/schemas/BalanceSheet'
+        income_statement:
+          $ref: '#/components/schemas/IncomeStatement'
+        cash_flow:
+          $ref: '#/components/schemas/CashFlowStatement'
+
+    BalanceSheet:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        total_assets:
+          type: number
+          format: double
+        total_liabilities:
+          type: number
+          format: double
+        total_equity:
+          type: number
+          format: double
+
+    IncomeStatement:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        revenue:
+          type: number
+          format: double
+        operating_income:
+          type: number
+          format: double
+        net_income:
+          type: number
+          format: double
+        eps:
+          type: number
+          format: double
+
+    CashFlowStatement:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        operating_cash_flow:
+          type: number
+          format: double
+        investing_cash_flow:
+          type: number
+          format: double
+        net_cash_change:
+          type: number
+          format: double
+
+    StockAnnouncement:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        announcement_date:
+          type: string
+          format: date
+        announcement_type:
+          type: string
+
+    CompanyInfo:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        industry:
+          type: string
+        sector:
+          type: string
+        market_cap:
+          type: number
+          format: double
+        employees:
+          type: integer
+
+    MarketIndex:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        current_value:
+          type: number
+          format: double
+        change:
+          type: number
+          format: double
+        change_percent:
+          type: number
+          format: double
+        timestamp:
+          type: string
+          format: date-time
