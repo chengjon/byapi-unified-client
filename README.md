@@ -108,6 +108,69 @@ except NetworkError:
     print("Network error - auto-retrying")
 ```
 
+## 🔄 Multi-Key Failover & Health Tracking
+
+The client supports multiple license keys with automatic failover and health tracking:
+
+### Configuration
+
+Use comma-separated keys in `.env`:
+
+```env
+BYAPI_LICENCE=key1,key2,key3
+```
+
+### Health States
+
+- **Healthy**: Working normally
+- **Faulty**: 5+ consecutive failures (still usable)
+- **Invalid**: 10+ total failures (permanently disabled this session)
+
+### Example Usage
+
+```python
+from byapi_client_unified import ByapiClient
+
+client = ByapiClient()
+
+# Check health of all keys
+health = client.get_license_health()
+for key in health:
+    print(f"Key: {key.key}")           # Masked for safety (e.g., "5E93C803...")
+    print(f"Status: {key.status}")     # healthy, faulty, or invalid
+    print(f"Failures: {key.total_failures}/10")
+
+# Automatic failover happens transparently
+quote = client.stock_prices.get_latest("000001")  # Uses healthy key
+# If key fails 5+ times → switches to next key
+# If all keys fail 10+ times → raises error
+```
+
+### Advanced: Manual Key Management
+
+```python
+from byapi_config import KeyRotationManager
+
+# Manual key rotation
+manager = KeyRotationManager(["key1", "key2", "key3"])
+
+# Track key health
+manager.mark_key_failure("key1", "401 Unauthorized")
+manager.mark_key_success("key2")
+
+# Get next usable key
+next_key = manager.get_next_key()  # Prefers healthy > faulty > invalid
+```
+
+### Key Preference Hierarchy
+
+The client automatically selects keys in this order:
+1. **Healthy keys** (preferred)
+2. **Faulty keys** (if no healthy keys available)
+3. **Invalid keys** (as last resort - will likely fail)
+
+See `examples/license_failover.py` for complete examples.
+
 ## ⚙️ Configuration
 
 ### Environment Variables
@@ -119,6 +182,8 @@ except NetworkError:
 | `BYAPI_TIMEOUT` | `30` seconds |
 | `BYAPI_MAX_RETRIES` | `5` |
 | `BYAPI_LOG_LEVEL` | `INFO` |
+| `BYAPI_CONSECUTIVE_FAILURES` | `5` (threshold for faulty) |
+| `BYAPI_TOTAL_FAILURES` | `10` (threshold for invalid) |
 
 ### Retry Logic
 
@@ -128,6 +193,12 @@ except NetworkError:
 - **Jitter**: ±20%
 - **Max attempts**: 5
 
+### Recovery
+
+- **Session-scoped**: Health state resets when process restarts
+- **Graceful degradation**: Faulty keys are still used if no healthy keys exist
+- **Logging**: All key failures are logged for monitoring
+
 ## 🧪 Testing
 
 ```bash
@@ -136,7 +207,8 @@ pytest tests/integration/
 
 ## 📈 Examples
 
-See `examples/basic_usage.py` for 7 complete examples.
+- `examples/basic_usage.py` - 7 complete API usage examples
+- `examples/license_failover.py` - Multi-key failover and health tracking (6 examples)
 
 ## 📝 Data Types
 

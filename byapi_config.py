@@ -66,6 +66,10 @@ class LicenseKeyHealth:
 
     def mark_success(self) -> None:
         """Reset consecutive counter on successful API call."""
+        # Invalid keys don't recover automatically - they stay invalid for the session
+        if self.status == "invalid":
+            return
+
         if self.consecutive_failures > 0:
             logger.debug(
                 f"License key {self._mask_key()} recovered after "
@@ -109,8 +113,14 @@ class KeyRotationManager:
         Args:
             license_keys: List of license keys (comma-separated from env)
         """
-        self.keys = [key.strip() for key in license_keys if key.strip()]
-        self.health_map = {key: LicenseKeyHealth(key=key) for key in self.keys}
+        # keys is now a dict mapping key string to LicenseKeyHealth
+        self.keys = {
+            key.strip(): LicenseKeyHealth(key=key.strip())
+            for key in license_keys
+            if key.strip()
+        }
+        # For iteration order, keep a list of key strings
+        self._key_list = list(self.keys.keys())
         self.current_index = 0
 
         logger.info(f"KeyRotationManager initialized with {len(self.keys)} key(s)")
@@ -119,44 +129,48 @@ class KeyRotationManager:
         """
         Get next usable license key.
 
+        Prefers healthy keys over faulty, but will use faulty if no healthy keys remain.
+        As a last resort, will return an invalid key if all keys are invalid.
+
         Returns:
-            A usable license key
+            A license key (healthy, faulty, or invalid as last resort)
 
         Raises:
-            ByapiError: If no healthy keys remain
+            ByapiError: If no keys are configured at all
         """
         from byapi_exceptions import ByapiError
 
         if not self.keys:
             raise ByapiError("No license keys configured")
 
-        # Try up to len(keys) times to find a usable key
-        for _ in range(len(self.keys)):
-            key = self.keys[self.current_index]
-            health = self.health_map[key]
+        # First, try to find a healthy key
+        healthy_keys = [k for k in self._key_list if self.keys[k].status == "healthy"]
+        if healthy_keys:
+            # Round-robin through healthy keys
+            key = healthy_keys[self.current_index % len(healthy_keys)]
+            self.current_index = (self.current_index + 1) % len(self._key_list)
+            return key
 
-            if health.is_usable:
-                return key
+        # No healthy keys, try faulty (still usable)
+        faulty_keys = [k for k in self._key_list if self.keys[k].status == "faulty"]
+        if faulty_keys:
+            key = faulty_keys[self.current_index % len(faulty_keys)]
+            self.current_index = (self.current_index + 1) % len(self._key_list)
+            return key
 
-            # Move to next key
-            self.current_index = (self.current_index + 1) % len(self.keys)
+        # No healthy or faulty keys, return an invalid key as last resort
+        # This allows the caller to attempt the request and get proper error handling
+        invalid_keys = [k for k in self._key_list if self.keys[k].status == "invalid"]
+        if invalid_keys:
+            key = invalid_keys[self.current_index % len(invalid_keys)]
+            self.current_index = (self.current_index + 1) % len(self._key_list)
+            logger.warning(
+                f"All available keys are invalid. Returning {key[:8]}... as last resort."
+            )
+            return key
 
-        # No healthy keys found
-        healthy_count = sum(
-            1 for h in self.health_map.values() if h.status == "healthy"
-        )
-        faulty_count = sum(
-            1 for h in self.health_map.values() if h.status == "faulty"
-        )
-        invalid_count = sum(
-            1 for h in self.health_map.values() if h.status == "invalid"
-        )
-
-        raise ByapiError(
-            f"No usable license keys available. "
-            f"Healthy: {healthy_count}, Faulty: {faulty_count}, Invalid: {invalid_count}. "
-            f"Configure more keys or restart the application to reset health state."
-        )
+        # This should never happen if keys are initialized
+        raise ByapiError("No license keys available")
 
     def mark_key_failure(self, key: str, reason: str) -> str:
         """
@@ -169,11 +183,11 @@ class KeyRotationManager:
         Returns:
             New status: "healthy", "faulty", or "invalid"
         """
-        if key not in self.health_map:
+        if key not in self.keys:
             logger.warning(f"Unknown key marked as failed: {key[:8]}...")
             return "unknown"
 
-        health = self.health_map[key]
+        health = self.keys[key]
         new_status = health.mark_failure(reason)
 
         if new_status == "faulty":
@@ -189,19 +203,40 @@ class KeyRotationManager:
         Args:
             key: The license key that succeeded
         """
-        if key not in self.health_map:
+        if key not in self.keys:
             return
 
-        self.health_map[key].mark_success()
+        self.keys[key].mark_success()
 
-    def get_health_status(self) -> List[LicenseKeyHealth]:
+    def get_health_status(self, mask_keys: bool = True) -> List[LicenseKeyHealth]:
         """
         Get health status of all keys.
+
+        Args:
+            mask_keys: If True, mask the key values for privacy (default True)
 
         Returns:
             List of LicenseKeyHealth objects for each key
         """
-        return [self.health_map[key] for key in self.keys]
+        health_list = list(self.keys.values())
+
+        if mask_keys:
+            # Create copies with masked keys
+            masked_health = []
+            for health in health_list:
+                # Create a copy with masked key
+                masked = LicenseKeyHealth(
+                    key=health._mask_key(),
+                    consecutive_failures=health.consecutive_failures,
+                    total_failures=health.total_failures,
+                    status=health.status,
+                    last_failed_timestamp=health.last_failed_timestamp,
+                    last_failed_reason=health.last_failed_reason,
+                )
+                masked_health.append(masked)
+            return masked_health
+
+        return health_list
 
 
 class ByapiConfig:
@@ -268,9 +303,17 @@ class ByapiConfig:
         """Get the next usable license key."""
         return self.key_manager.get_next_key()
 
-    def get_license_health(self) -> List[LicenseKeyHealth]:
-        """Get health status of all license keys."""
-        return self.key_manager.get_health_status()
+    def get_license_health(self, mask_keys: bool = True) -> List[LicenseKeyHealth]:
+        """
+        Get health status of all license keys.
+
+        Args:
+            mask_keys: If True, mask the key values for privacy (default True)
+
+        Returns:
+            List of LicenseKeyHealth objects for each key
+        """
+        return self.key_manager.get_health_status(mask_keys=mask_keys)
 
     @staticmethod
     def get_config() -> "ByapiConfig":
