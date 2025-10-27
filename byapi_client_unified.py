@@ -244,31 +244,73 @@ class BaseApiHandler:
 
 
 class StockPricesCategory:
-    """Category for stock price-related operations."""
+    """
+    Stock price data retrieval category.
+
+    Provides access to real-time and historical stock price data for Chinese A-share stocks.
+    Automatically handles license key injection, error handling, and data parsing.
+
+    Example:
+        >>> client = ByapiClient()
+        >>> quote = client.stock_prices.get_latest("000001")
+        >>> print(f"Stock {quote.name}: ¥{quote.current_price}")
+        Stock 中国神华: ¥15.45
+
+        >>> quotes = client.stock_prices.get_historical("000001", "2025-01-01", "2025-01-10")
+        >>> for q in quotes:
+        ...     print(f"{q.timestamp.date()}: ¥{q.current_price}")
+    """
 
     def __init__(self, handler: BaseApiHandler):
         """
         Initialize stock prices category.
 
         Args:
-            handler: BaseApiHandler instance for API calls
+            handler: BaseApiHandler instance for API requests with retry logic
         """
         self.handler = handler
 
     def get_latest(self, code: str) -> StockQuote:
         """
-        Get latest stock price for a single stock.
+        Get latest/current stock price for a single stock.
+
+        Fetches real-time trading price data for a single stock code. Returns a StockQuote
+        object containing current price, daily high/low, volume, and price changes.
 
         Args:
-            code: Stock code (6-digit format, e.g., "000001")
+            code (str): Stock code in 6-digit format (e.g., "000001" for 中国神华).
+                       Supports both Shanghai (600xxx) and Shenzhen (000xxx, 200xxx) codes.
 
         Returns:
-            StockQuote with latest price data
+            StockQuote: Object containing:
+                - code: Stock code
+                - name: Company name
+                - current_price: Current trading price (latest)
+                - daily_open: Today's opening price
+                - daily_high: Today's highest price
+                - daily_low: Today's lowest price
+                - volume: Trading volume (shares)
+                - turnover: Trading amount (currency)
+                - change: Absolute price change
+                - change_percent: Percentage price change
+                - timestamp: Data timestamp
+                - bid_price: Bid price (optional)
+                - ask_price: Ask price (optional)
 
         Raises:
-            NotFoundError: If stock code is invalid
-            AuthenticationError: If authentication fails
-            NetworkError: If network call fails
+            NotFoundError: If stock code is invalid or not found.
+            AuthenticationError: If API authentication fails (license key issue).
+            DataError: If API response is malformed or unparseable.
+            NetworkError: If network connection fails after retries.
+            RateLimitError: If rate limit is exceeded.
+
+        Example:
+            >>> client = ByapiClient()
+            >>> quote = client.stock_prices.get_latest("000001")
+            >>> print(f"{quote.name}: ¥{quote.current_price} ({quote.change_percent:+.2f}%)")
+            中国神华: ¥15.45 (+2.50%)
+            >>> print(f"Volume: {quote.volume:,} shares")
+            Volume: 45,678,900 shares
         """
         # API endpoint: hsstock/latest/{stock_code_market}/d/n
         # Where stock_code_market is code with market prefix (SHA: 600xxx, SZA: 000xxx)
@@ -315,18 +357,47 @@ class StockPricesCategory:
         """
         Get historical stock prices for a date range.
 
+        Fetches historical daily price data for a stock between two dates. Useful for
+        analyzing price trends, computing technical indicators, or backtesting strategies.
+
         Args:
-            code: Stock code
-            start_date: Start date (YYYY-MM-DD format)
-            end_date: End date (YYYY-MM-DD format)
+            code (str): Stock code in 6-digit format (e.g., "000001").
+            start_date (str): Start date in YYYY-MM-DD format (e.g., "2025-01-01").
+                            Inclusive - data from this date is included.
+            end_date (str): End date in YYYY-MM-DD format (e.g., "2025-01-31").
+                           Inclusive - data up to this date is included.
 
         Returns:
-            List of StockQuote objects for the date range
+            List[StockQuote]: List of StockQuote objects, one per trading day.
+                             Ordered chronologically (oldest first).
+                             Empty list if no data available for date range.
+
+                             Each StockQuote contains:
+                             - code, name: Stock identifier
+                             - current_price, daily_open, daily_high, daily_low: Price data
+                             - volume, turnover: Trading activity
+                             - change, change_percent: Price movement
+                             - timestamp: Trading date
 
         Raises:
-            NotFoundError: If stock code is invalid
-            AuthenticationError: If authentication fails
-            NetworkError: If network call fails
+            NotFoundError: If stock code is invalid or not found.
+            AuthenticationError: If API authentication fails.
+            DataError: If response is malformed.
+            NetworkError: If connection fails.
+
+        Example:
+            >>> from datetime import datetime, timedelta
+            >>> client = ByapiClient()
+            >>> end = datetime.now().strftime("%Y-%m-%d")
+            >>> start = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+            >>> quotes = client.stock_prices.get_historical("000001", start, end)
+            >>> print(f"Retrieved {len(quotes)} trading days")
+            Retrieved 20 trading days
+            >>> for q in quotes[-5:]:  # Last 5 days
+            ...     print(f"{q.timestamp.date()}: Open ¥{q.daily_open:.2f}, "
+            ...           f"Close ¥{q.current_price:.2f}, Vol {q.volume:,}")
+            2025-01-27: Open ¥15.20, Close ¥15.45, Vol 45678900
+            2025-01-28: Open ¥15.45, Close ¥15.60, Vol 52341200
         """
         # API endpoint: hsstock/history/{stock_code_market}/d/n
         # Parameters: st (start time), et (end time)
@@ -370,28 +441,69 @@ class StockPricesCategory:
 
 
 class IndicatorsCategory:
-    """Category for technical indicators."""
+    """
+    Technical indicators and analysis category.
+
+    Provides access to technical analysis indicators (moving averages, RSI, MACD, Bollinger Bands, etc.)
+    for price analysis and trading signal generation.
+
+    Example:
+        >>> client = ByapiClient()
+        >>> indicators = client.indicators.get_indicators("000001")
+        >>> if indicators:
+        ...     latest = indicators[-1]
+        ...     print(f"RSI: {latest.rsi:.2f}")
+        ...     print(f"MA-20: ¥{latest.ma_20:.2f}")
+        ...     print(f"MACD: {latest.macd:.4f}")
+    """
 
     def __init__(self, handler: BaseApiHandler):
-        """Initialize indicators category."""
+        """
+        Initialize indicators category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
         self.handler = handler
 
     def get_indicators(self, code: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> List[TechnicalIndicator]:
         """
         Get technical indicators for a stock.
 
+        Fetches technical analysis indicators including moving averages (MA-5/10/20/50/200),
+        momentum indicators (RSI, MACD), and volatility indicators (Bollinger Bands, ATR).
+
         Args:
-            code: Stock code
-            start_date: Optional start date (YYYY-MM-DD format)
-            end_date: Optional end date (YYYY-MM-DD format)
+            code (str): Stock code in 6-digit format (e.g., "000001").
+            start_date (str, optional): Start date in YYYY-MM-DD format. Defaults to None (all available data).
+            end_date (str, optional): End date in YYYY-MM-DD format. Defaults to None (current).
 
         Returns:
-            List of TechnicalIndicator objects
+            List[TechnicalIndicator]: List of indicator objects, one per time period.
+                                    Empty list if no data available.
+
+                                    Each TechnicalIndicator contains:
+                                    - code, timestamp: Identifier and time
+                                    - ma_5, ma_10, ma_20, ma_50, ma_200: Moving averages
+                                    - rsi: Relative Strength Index (0-100)
+                                    - macd, macd_signal, macd_histogram: MACD indicators
+                                    - bollinger_upper/middle/lower: Bollinger Bands
+                                    - atr: Average True Range (volatility)
 
         Raises:
-            NotFoundError: If stock code is invalid
-            DataError: If response parsing fails
-            NetworkError: If API call fails
+            DataError: If response parsing fails.
+            NetworkError: If connection fails.
+
+        Example:
+            >>> client = ByapiClient()
+            >>> indicators = client.indicators.get_indicators("000001", "2025-01-01", "2025-01-31")
+            >>> print(f"Retrieved {len(indicators)} indicator records")
+            Retrieved 20 indicator records
+            >>> for ind in indicators[-3:]:
+            ...     print(f"{ind.timestamp.date()}: RSI={ind.rsi:.2f} "
+            ...           f"MACD={ind.macd:.4f} MA20=¥{ind.ma_20:.2f}")
+            2025-01-27: RSI=65.32 MACD=0.0234 MA20=¥15.18
+            2025-01-28: RSI=68.45 MACD=0.0267 MA20=¥15.22
         """
         # API endpoint: hsstock/indicators
         params = {"stock_code_market": code}
@@ -438,10 +550,28 @@ class IndicatorsCategory:
 
 
 class FinancialsCategory:
-    """Category for financial statements."""
+    """
+    Financial statements category.
+
+    Provides access to company financial data including balance sheets, income statements,
+    and cash flow statements. Useful for fundamental analysis and financial health assessment.
+
+    Example:
+        >>> client = ByapiClient()
+        >>> financials = client.financials.get_financials("000001")
+        >>> if financials.balance_sheet:
+        ...     bs = financials.balance_sheet
+        ...     print(f"Total Assets: ¥{bs.total_assets:,.0f}")
+        ...     print(f"Debt/Equity: {bs.total_liabilities/bs.total_equity:.2f}")
+    """
 
     def __init__(self, handler: BaseApiHandler):
-        """Initialize financials category."""
+        """
+        Initialize financials category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
         self.handler = handler
 
     def get_financials(
@@ -454,18 +584,52 @@ class FinancialsCategory:
         """
         Get financial statements for a stock.
 
+        Retrieves company financial data from annual/quarterly reports. Can fetch balance sheets,
+        income statements, and cash flow statements independently or together.
+
         Args:
-            code: Stock code
-            statement_type: Type of statement: 'balance_sheet', 'income_statement', 'cash_flow', or 'all'
-            start_date: Optional start date
-            end_date: Optional end date
+            code (str): Stock code in 6-digit format (e.g., "000001").
+            statement_type (str): Which statements to retrieve. Options:
+                                - "all": All three statements (default)
+                                - "balance_sheet": Balance sheet only
+                                - "income_statement": Income statement only
+                                - "cash_flow": Cash flow statement only
+            start_date (str, optional): Start date for historical data (YYYY-MM-DD format).
+            end_date (str, optional): End date for historical data (YYYY-MM-DD format).
 
         Returns:
-            FinancialData object with requested statements
+            FinancialData: Object containing:
+                - code: Stock code
+                - balance_sheet: BalanceSheet object (if requested) with:
+                    * total_assets, total_liabilities, total_equity
+                    * current_assets, current_liabilities, fixed_assets
+                - income_statement: IncomeStatement object (if requested) with:
+                    * revenue, operating_expenses, operating_income, net_income, eps
+                - cash_flow: CashFlowStatement object (if requested) with:
+                    * operating_cash_flow, investing_cash_flow, financing_cash_flow, net_cash_change
 
         Raises:
-            DataError: If response parsing fails
-            NetworkError: If API call fails
+            DataError: If response parsing fails.
+            NetworkError: If connection fails.
+
+        Example:
+            >>> client = ByapiClient()
+            >>> fd = client.financials.get_financials("000001", "balance_sheet")
+            >>> if fd.balance_sheet:
+            ...     bs = fd.balance_sheet
+            ...     print(f"Balance Sheet as of {bs.timestamp}")
+            ...     print(f"Assets: ¥{bs.total_assets/1e8:.1f}B")
+            ...     print(f"Equity: ¥{bs.total_equity/1e8:.1f}B")
+            Balance Sheet as of 2024-12-31
+            Assets: ¥128.5B
+            Equity: ¥72.3B
+
+            >>> fd_all = client.financials.get_financials("000001", "all")
+            >>> if fd_all.income_statement:
+            ...     inc = fd_all.income_statement
+            ...     profit_margin = (inc.net_income / inc.revenue) * 100
+            ...     print(f"Profit Margin: {profit_margin:.2f}%")
+            Profit Margin: 12.45%
         """
         financial_data = FinancialData(code=code)
 
@@ -527,26 +691,71 @@ class FinancialsCategory:
 
 
 class AnnouncementsCategory:
-    """Category for company announcements and news."""
+    """
+    Company announcements and news category.
+
+    Provides access to company news, announcements, and major events (dividends, splits,
+    acquisitions, earnings, etc.) that may impact stock prices.
+
+    Example:
+        >>> client = ByapiClient()
+        >>> announcements = client.announcements.get_announcements("000001", limit=5)
+        >>> for ann in announcements:
+        ...     print(f"[{ann.announcement_type.upper()}] {ann.title}")
+        ...     print(f"  Importance: {ann.importance} | Date: {ann.announcement_date}")
+    """
 
     def __init__(self, handler: BaseApiHandler):
-        """Initialize announcements category."""
+        """
+        Initialize announcements category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
         self.handler = handler
 
     def get_announcements(self, code: str, limit: int = 10) -> List[StockAnnouncement]:
         """
         Get recent company announcements for a stock.
 
+        Retrieves latest company announcements, news, and major events. Useful for
+        tracking corporate actions and news that may affect stock performance.
+
         Args:
-            code: Stock code
-            limit: Maximum number of announcements to return (default: 10)
+            code (str): Stock code in 6-digit format (e.g., "000001").
+            limit (int): Maximum number of announcements to return (default: 10).
+                        Use larger values for more historical announcements.
 
         Returns:
-            List of StockAnnouncement objects
+            List[StockAnnouncement]: List of announcements, newest first.
+                                    Empty list if no announcements available.
+
+                                    Each StockAnnouncement contains:
+                                    - code: Stock code
+                                    - title: Announcement title
+                                    - content: Full announcement text
+                                    - announcement_date: Date announcement was made
+                                    - announcement_type: Type (e.g., "dividend", "split", "acquisition")
+                                    - importance: Level ("high", "medium", "low")
+                                    - source: News source (optional)
+                                    - url: Link to full announcement (optional)
 
         Raises:
-            DataError: If response parsing fails
-            NetworkError: If API call fails
+            DataError: If response parsing fails.
+            NetworkError: If connection fails.
+
+        Example:
+            >>> client = ByapiClient()
+            >>> announcements = client.announcements.get_announcements("000001", limit=10)
+            >>> print(f"Found {len(announcements)} recent announcements")
+            Found 8 recent announcements
+            >>> for ann in announcements[:3]:
+            ...     print(f"{ann.announcement_date}: {ann.title}")
+            ...     print(f"  Type: {ann.announcement_type}, Importance: {ann.importance}")
+            2025-01-28: 2024年度分红预案
+              Type: dividend, Importance: high
+            2025-01-20: 股东大会预告
+              Type: shareholder_meeting, Importance: medium
         """
         # API endpoint: hscp/ljgg (latest announcements)
         params = {"stock_code": code}
@@ -584,26 +793,73 @@ class AnnouncementsCategory:
 
 
 class CompanyInfoCategory:
-    """Category for company information and classification."""
+    """
+    Company information and classification category.
+
+    Provides access to company profile information including industry classification,
+    market cap, employee count, founding date, and exchange listing details.
+
+    Example:
+        >>> client = ByapiClient()
+        >>> company = client.company_info.get_company_info("000001")
+        >>> print(f"{company.name} ({company.code})")
+        >>> print(f"Industry: {company.industry} | Sector: {company.sector}")
+        >>> if company.market_cap:
+        ...     print(f"Market Cap: ¥{company.market_cap/1e8:.1f}B")
+    """
 
     def __init__(self, handler: BaseApiHandler):
-        """Initialize company info category."""
+        """
+        Initialize company info category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
         self.handler = handler
 
     def get_company_info(self, code: str) -> CompanyInfo:
         """
         Get company information for a stock.
 
+        Retrieves detailed company profile information including name, industry/sector
+        classification, market cap, employee count, founding year, and exchange listing details.
+
         Args:
-            code: Stock code
+            code (str): Stock code in 6-digit format (e.g., "000001").
 
         Returns:
-            CompanyInfo object with company details
+            CompanyInfo: Object containing:
+                - code: Stock code (6-digit)
+                - name: Company name in Chinese
+                - industry: Industry classification (e.g., "能源")
+                - sector: Sector classification (e.g., "采矿")
+                - name_en: Company name in English (optional)
+                - market_cap: Market capitalization in yuan (optional)
+                - employees: Number of employees (optional)
+                - founded_year: Year company was founded (optional)
+                - exchange: Stock exchange code (e.g., "SHA", "SZA") (optional)
+                - list_date: Date listed on exchange (optional)
+                - description: Company description (optional)
 
         Raises:
-            NotFoundError: If company not found
-            DataError: If response parsing fails
-            NetworkError: If API call fails
+            NotFoundError: If company not found.
+            DataError: If response parsing fails.
+            NetworkError: If connection fails.
+
+        Example:
+            >>> client = ByapiClient()
+            >>> company = client.company_info.get_company_info("000001")
+            >>> print(f"Company: {company.name}")
+            Company: 中国神华能源股份有限公司
+            >>> print(f"Listed: {company.list_date} on {company.exchange}")
+            Listed: 2008-10-16 on SZA
+            >>> if company.market_cap:
+            ...     cap_b = company.market_cap / 1e8
+            ...     print(f"Market Cap: ¥{cap_b:.1f}B")
+            Market Cap: ¥128.5B
+            >>> if company.employees:
+            ...     print(f"Employees: {company.employees:,}")
+            Employees: 45,200
         """
         # API endpoint: hscp/gsjj (company introduction)
         params = {"stock_code": code}
@@ -638,31 +894,119 @@ class CompanyInfoCategory:
 
 class ByapiClient:
     """
-    Main unified API client for accessing Byapi stock data.
+    Unified Byapi Stock API Client - Main entry point.
 
-    Provides category-based access to all stock market data:
-    - stock_prices: Real-time and historical price data
-    - indicators: Technical indicators and analysis
-    - financials: Financial statements
-    - announcements: Company news and announcements
-    - company_info: Company profile information
-    - indices: Market indices
+    A comprehensive, production-ready Python client library for accessing stock market data
+    from the Byapi API (http://api.biyingapi.com). Provides easy-to-use functions for
+    fetching stock prices, technical indicators, financial statements, and company information.
 
-    Example:
+    **Key Features**:
+    - **Unified Interface**: All data organized into logical categories for discoverability
+    - **Type Safety**: Full type hints for IDE autocomplete and static type checking
+    - **Error Handling**: Custom exception hierarchy for intelligent error handling
+    - **Automatic Retry**: Exponential backoff with jitter for transient failures
+    - **Multi-Key Failover**: Automatic switching between license keys with health tracking
+    - **Structured Logging**: Comprehensive logging without exposing sensitive data
+    - **Rate Limit Handling**: Built-in respect for API rate limits
+
+    **Installation**:
+        pip install byapi-client
+
+    **Setup** (create `.env` file):
+        BYAPI_LICENCE=your_api_key_here
+
+    **Quick Start**:
+        from byapi_client_unified import ByapiClient
+
         client = ByapiClient()
+
+        # Get latest stock price
         quote = client.stock_prices.get_latest("000001")
-        print(f"Price: ¥{quote.current_price}")
+        print(f"{quote.name}: ¥{quote.current_price}")
+
+        # Get technical indicators
+        indicators = client.indicators.get_indicators("000001")
+
+        # Get financial statements
+        financials = client.financials.get_financials("000001")
+
+        # Get company information
+        company = client.company_info.get_company_info("000001")
+
+        # Get announcements
+        announcements = client.announcements.get_announcements("000001")
+
+    **Categories** (accessed as properties):
+        client.stock_prices: Real-time and historical price data
+        client.indicators: Technical indicators and analysis
+        client.financials: Balance sheets, income, cash flow statements
+        client.announcements: Company news and announcements
+        client.company_info: Company profile and classification
+
+    **Error Handling**:
+        from byapi_exceptions import (
+            AuthenticationError, NotFoundError, NetworkError,
+            RateLimitError, DataError
+        )
+
+        try:
+            quote = client.stock_prices.get_latest("000001")
+        except NotFoundError:
+            print("Stock code not found")
+        except AuthenticationError:
+            print("License key issue - check .env file")
+        except NetworkError:
+            print("Network issue - will retry automatically")
+        except RateLimitError:
+            print("Rate limit exceeded - try again later")
+
+    **License Key Management**:
+        # Single key
+        BYAPI_LICENCE=key_abc123
+
+        # Multiple keys (automatic failover)
+        BYAPI_LICENCE=key_abc123,key_def456,key_ghi789
+
+        # Check key health
+        health = client.get_license_health()
+        for key_health in health:
+            print(f"Status: {key_health.status}")
+            print(f"Failures: {key_health.total_failures}/10")
+
+    **Environment Variables**:
+        BYAPI_LICENCE (required): API license key(s) - comma-separated for multiple
+        BYAPI_BASE_URL (optional): API base URL (default: http://api.biyingapi.com)
+        BYAPI_HTTPS_BASE_URL (optional): HTTPS URL (default: https://api.biyingapi.com)
+        BYAPI_TIMEOUT (optional): Request timeout in seconds (default: 30)
+        BYAPI_MAX_RETRIES (optional): Max retry attempts (default: 5)
+        BYAPI_LOG_LEVEL (optional): Logging level (default: INFO)
     """
 
     def __init__(self, config_instance: Optional[ByapiConfig] = None):
         """
         Initialize Byapi client.
 
+        Initializes the client with configuration from environment variables (.env file).
+        Creates instances of all data access categories.
+
         Args:
-            config_instance: Optional ByapiConfig instance (uses global if not provided)
+            config_instance (ByapiConfig, optional): Custom configuration instance.
+                                                    If None, loads from .env file.
+                                                    Default: None (use global config).
 
         Raises:
-            ValueError: If configuration is invalid or missing
+            ValueError: If BYAPI_LICENCE environment variable is missing.
+            EnvironmentError: If .env file cannot be loaded.
+
+        Example:
+            >>> # Load config from .env (default)
+            >>> client = ByapiClient()
+
+            >>> # Use custom config
+            >>> from byapi_config import ByapiConfig
+            >>> config = ByapiConfig()
+            >>> config.license_keys = ["key1", "key2"]
+            >>> client = ByapiClient(config_instance=config)
         """
         self.config = config_instance or config
         self.handler = BaseApiHandler(self.config)
@@ -676,18 +1020,42 @@ class ByapiClient:
 
         logger.info(f"ByapiClient initialized (v{__version__}) with {len(self.config.license_keys)} key(s)")
 
-    def get_license_health(self):
+    def get_license_health(self) -> List[Any]:
         """
         Get health status of all configured license keys.
 
+        Returns information about each configured license key's health status,
+        including failure counts and current status. Useful for monitoring
+        API access and debugging authentication issues.
+
         Returns:
-            List of LicenseKeyHealth objects showing status of each key
+            List[LicenseKeyHealth]: List of health objects, one per license key.
+                                   Each contains:
+                                   - key: Masked license key (first 8 chars only)
+                                   - consecutive_failures: Count of consecutive failures (0-5+)
+                                   - total_failures: Total failures in session (0-10+)
+                                   - status: "healthy", "faulty" (5 consecutive failures),
+                                           or "invalid" (10 total failures)
+                                   - last_failed_timestamp: When last failure occurred
 
         Example:
-            health = client.get_license_health()
-            for key_health in health:
-                print(f"Key status: {key_health.status}")
-                print(f"Failures: {key_health.total_failures}/10")
+            >>> client = ByapiClient()
+            >>> health = client.get_license_health()
+            >>> for key_health in health:
+            ...     print(f"Key {key_health.key}:")
+            ...     print(f"  Status: {key_health.status}")
+            ...     print(f"  Consecutive Failures: {key_health.consecutive_failures}")
+            ...     print(f"  Total Failures: {key_health.total_failures}/10")
+            Key 12345678...:
+              Status: healthy
+              Consecutive Failures: 0
+              Total Failures: 0/10
+
+            >>> # Check if any keys are marked invalid
+            >>> invalid_keys = [kh for kh in health if kh.status == "invalid"]
+            >>> if invalid_keys:
+            ...     print(f"Warning: {len(invalid_keys)} license key(s) are disabled")
+            ...     print("Consider refreshing your .env file or restarting the application")
         """
         return self.config.get_license_health()
 
