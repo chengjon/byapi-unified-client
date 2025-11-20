@@ -1,96 +1,96 @@
-# Unified Byapi Stock API Client
+# 统一 Byapi 股票 API 客户端
 
-A comprehensive, production-ready Python client library for accessing stock market data from the Byapi API. Provides easy-to-use functions for fetching real-time and historical stock prices, technical indicators, financial statements, and company information for Chinese A-share stocks.
+一个全面的、生产就绪的 Python 客户端库，用于从 Byapi API 获取股票市场数据。提供易于使用的函数来获取中国 A 股的实时和历史股价、技术指标、财务报表和公司信息。
 
-## 🎯 Features
+## 🎯 特性
 
-- **Unified Interface**: All stock data organized into logical categories for easy discovery
-- **Type Safety**: Full type hints for IDE autocomplete and static type checking
-- **Automatic Retry**: Exponential backoff with jitter for handling transient failures
-- **Multi-Key Failover**: Automatic switching between license keys with health tracking (5 consecutive failures = faulty, 10 total = disabled)
-- **Error Handling**: Custom exception hierarchy for intelligent error handling
-- **Structured Logging**: Comprehensive logging without exposing sensitive data
-- **Rate Limit Support**: Built-in respect for API rate limits
-- **Zero Configuration**: Loads configuration from `.env` file automatically
+- **统一接口**: 所有股票数据按逻辑分类组织，便于发现和使用
+- **类型安全**: 完整的类型提示，支持 IDE 自动完成和静态类型检查
+- **自动重试**: 带抖动的指数退避，处理瞬时故障
+- **多密钥故障转移**: 自动切换许可证密钥，带健康跟踪（连续 5 次失败 = 故障，总计 10 次 = 禁用）
+- **错误处理**: 自定义异常层次结构，实现智能错误处理
+- **结构化日志**: 全面的日志记录，不暴露敏感数据
+- **速率限制支持**: 内置对 API 速率限制的尊重
+- **零配置**: 自动从 `.env` 文件加载配置
 
-## 📦 Installation
+## 📦 安装
 
 ```bash
 pip install requests python-dotenv
 ```
 
-Then copy the Byapi client files to your project.
+然后将 Byapi 客户端文件复制到您的项目中。
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### 1. Setup Environment
+### 1. 设置环境
 
-Create a `.env` file:
+创建 `.env` 文件：
 
 ```env
 BYAPI_LICENCE=your_api_key_here
 ```
 
-### 2. Basic Usage
+### 2. 基本用法
 
 ```python
 from byapi_client_unified import ByapiClient
 
 client = ByapiClient()
 
-# Get latest stock price
+# 获取最新股价
 quote = client.stock_prices.get_latest("000001")
 print(f"{quote.name}: ¥{quote.current_price}")
 
-# Get historical prices
+# 获取历史价格
 quotes = client.stock_prices.get_historical("000001", "2025-01-01", "2025-01-31")
 
-# Get technical indicators
+# 获取技术指标
 indicators = client.indicators.get_indicators("000001")
 
-# Get financial statements
+# 获取财务报表
 financials = client.financials.get_financials("000001")
 
-# Get company information
+# 获取公司信息
 company = client.company_info.get_company_info("000001")
 
-# Get announcements
+# 获取公告
 announcements = client.announcements.get_announcements("000001")
 ```
 
-## 📚 API Reference
+## 📚 API 参考
 
-### Data Categories
+### 数据分类
 
-#### Stock Prices
-- `get_latest(code: str) -> StockQuote`: Real-time price
-- `get_historical(code: str, start_date: str, end_date: str) -> List[StockQuote]`: Historical prices
+#### 股票价格
+- `get_latest(code: str) -> StockQuote`: 实时价格
+- `get_historical(code: str, start_date: str, end_date: str) -> List[StockQuote]`: 历史价格
 
-#### Technical Indicators
+#### 技术指标
 - `get_indicators(code: str, start_date: Optional[str], end_date: Optional[str]) -> List[TechnicalIndicator]`
 
-Includes: MA-5/10/20/50/200, RSI, MACD, Bollinger Bands, ATR
+包含: MA-5/10/20/50/200, RSI, MACD, 布林带, ATR
 
-#### Financial Statements
+#### 财务报表
 - `get_financials(code: str, statement_type: str = "all") -> FinancialData`
 
-Supports: balance_sheet, income_statement, cash_flow
+支持: balance_sheet（资产负债表）, income_statement（利润表）, cash_flow（现金流量表）
 
-#### Announcements
+#### 公告
 - `get_announcements(code: str, limit: int = 10) -> List[StockAnnouncement]`
 
-#### Company Information
+#### 公司信息
 - `get_company_info(code: str) -> CompanyInfo`
 
-### License Key Management
+### 许可证密钥管理
 
 ```python
 health = client.get_license_health()
 for key in health:
-    print(f"Status: {key.status}")  # healthy, faulty, or invalid
+    print(f"状态: {key.status}")  # healthy, faulty, 或 invalid
 ```
 
-## 🛠 Error Handling
+## 🛠 错误处理
 
 ```python
 from byapi_exceptions import (
@@ -101,138 +101,138 @@ from byapi_exceptions import (
 try:
     quote = client.stock_prices.get_latest("000001")
 except NotFoundError:
-    print("Stock not found")
+    print("股票未找到")
 except AuthenticationError:
-    print("License key issue")
+    print("许可证密钥问题")
 except NetworkError:
-    print("Network error - auto-retrying")
+    print("网络错误 - 自动重试中")
 ```
 
-## 🔄 Multi-Key Failover & Health Tracking
+## 🔄 多密钥故障转移与健康跟踪
 
-The client supports multiple license keys with automatic failover and health tracking:
+客户端支持多个许可证密钥，具有自动故障转移和健康跟踪功能：
 
-### Configuration
+### 配置
 
-Use comma-separated keys in `.env`:
+在 `.env` 中使用逗号分隔的密钥：
 
 ```env
 BYAPI_LICENCE=key1,key2,key3
 ```
 
-### Health States
+### 健康状态
 
-- **Healthy**: Working normally
-- **Faulty**: 5+ consecutive failures (still usable)
-- **Invalid**: 10+ total failures (permanently disabled this session)
+- **Healthy（健康）**: 正常工作
+- **Faulty（故障）**: 连续失败 5+ 次（仍可使用）
+- **Invalid（无效）**: 总失败 10+ 次（本次会话永久禁用）
 
-### Example Usage
+### 使用示例
 
 ```python
 from byapi_client_unified import ByapiClient
 
 client = ByapiClient()
 
-# Check health of all keys
+# 检查所有密钥的健康状况
 health = client.get_license_health()
 for key in health:
-    print(f"Key: {key.key}")           # Masked for safety (e.g., "5E93C803...")
-    print(f"Status: {key.status}")     # healthy, faulty, or invalid
-    print(f"Failures: {key.total_failures}/10")
+    print(f"密钥: {key.key}")           # 为安全起见已掩码（如 "5E93C803..."）
+    print(f"状态: {key.status}")        # healthy, faulty, 或 invalid
+    print(f"失败次数: {key.total_failures}/10")
 
-# Automatic failover happens transparently
-quote = client.stock_prices.get_latest("000001")  # Uses healthy key
-# If key fails 5+ times → switches to next key
-# If all keys fail 10+ times → raises error
+# 自动故障转移透明进行
+quote = client.stock_prices.get_latest("000001")  # 使用健康密钥
+# 如果密钥失败 5+ 次 → 切换到下一个密钥
+# 如果所有密钥失败 10+ 次 → 抛出错误
 ```
 
-### Advanced: Manual Key Management
+### 高级：手动密钥管理
 
 ```python
 from byapi_config import KeyRotationManager
 
-# Manual key rotation
+# 手动密钥轮换
 manager = KeyRotationManager(["key1", "key2", "key3"])
 
-# Track key health
+# 跟踪密钥健康
 manager.mark_key_failure("key1", "401 Unauthorized")
 manager.mark_key_success("key2")
 
-# Get next usable key
-next_key = manager.get_next_key()  # Prefers healthy > faulty > invalid
+# 获取下一个可用密钥
+next_key = manager.get_next_key()  # 优先: healthy > faulty > invalid
 ```
 
-### Key Preference Hierarchy
+### 密钥优先级层次
 
-The client automatically selects keys in this order:
-1. **Healthy keys** (preferred)
-2. **Faulty keys** (if no healthy keys available)
-3. **Invalid keys** (as last resort - will likely fail)
+客户端按以下顺序自动选择密钥：
+1. **健康密钥**（优先）
+2. **故障密钥**（如果没有健康密钥可用）
+3. **无效密钥**（作为最后手段 - 可能会失败）
 
-See `examples/license_failover.py` for complete examples.
+完整示例请参见 `examples/license_failover.py`。
 
-## ⚙️ Configuration
+## ⚙️ 配置
 
-### Environment Variables
+### 环境变量
 
-| Variable | Default |
-|----------|---------|
-| `BYAPI_LICENCE` | *(required)* |
+| 变量 | 默认值 |
+|------|--------|
+| `BYAPI_LICENCE` | *（必需）* |
 | `BYAPI_BASE_URL` | `http://api.biyingapi.com` |
-| `BYAPI_TIMEOUT` | `30` seconds |
+| `BYAPI_TIMEOUT` | `30` 秒 |
 | `BYAPI_MAX_RETRIES` | `5` |
 | `BYAPI_LOG_LEVEL` | `INFO` |
-| `BYAPI_CONSECUTIVE_FAILURES` | `5` (threshold for faulty) |
-| `BYAPI_TOTAL_FAILURES` | `10` (threshold for invalid) |
+| `BYAPI_CONSECUTIVE_FAILURES` | `5`（故障阈值） |
+| `BYAPI_TOTAL_FAILURES` | `10`（无效阈值） |
 
-### Retry Logic
+### 重试逻辑
 
-- **Base delay**: 100ms
-- **Max delay**: 30 seconds
-- **Multiplier**: 2x per attempt
-- **Jitter**: ±20%
-- **Max attempts**: 5
+- **基础延迟**: 100ms
+- **最大延迟**: 30 秒
+- **乘数**: 每次尝试 2 倍
+- **抖动**: ±20%
+- **最大尝试次数**: 5
 
-### Recovery
+### 恢复机制
 
-- **Session-scoped**: Health state resets when process restarts
-- **Graceful degradation**: Faulty keys are still used if no healthy keys exist
-- **Logging**: All key failures are logged for monitoring
+- **会话作用域**: 进程重启时健康状态重置
+- **优雅降级**: 如果没有健康密钥，故障密钥仍可使用
+- **日志记录**: 所有密钥失败都会记录以便监控
 
-## 🧪 Testing
+## 🧪 测试
 
 ```bash
 pytest tests/integration/
 ```
 
-## 📈 Examples
+## 📈 示例
 
-- `examples/basic_usage.py` - 7 complete API usage examples
-- `examples/license_failover.py` - Multi-key failover and health tracking (6 examples)
+- `examples/basic_usage.py` - 7 个完整的 API 使用示例
+- `examples/license_failover.py` - 多密钥故障转移和健康跟踪（6 个示例）
 
-## 📝 Data Types
+## 📝 数据类型
 
-All responses are typed dataclasses:
-- `StockQuote`: Price data
-- `TechnicalIndicator`: Technical analysis
-- `FinancialData`: Financial statements
-- `StockAnnouncement`: Announcements
-- `CompanyInfo`: Company profile
+所有响应都是类型化的数据类：
+- `StockQuote`: 价格数据
+- `TechnicalIndicator`: 技术分析
+- `FinancialData`: 财务报表
+- `StockAnnouncement`: 公告
+- `CompanyInfo`: 公司简介
 
-## Version
+## 版本
 
-**v1.0.0** - Initial Release
+**v1.0.0** - 初始版本
 
-Features:
-- Stock prices (real-time and historical)
-- Technical indicators
-- Financial statements
-- Announcements and news
-- Company information
-- Multi-key failover
-- Comprehensive error handling
-- Structured logging
+功能：
+- 股票价格（实时和历史）
+- 技术指标
+- 财务报表
+- 公告和新闻
+- 公司信息
+- 多密钥故障转移
+- 全面的错误处理
+- 结构化日志
 
 ---
 
-**Built for Chinese stock market analysis**
+**专为中国股市分析构建**

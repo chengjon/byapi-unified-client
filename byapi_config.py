@@ -30,9 +30,13 @@ class LicenseKeyHealth:
     key: str
     consecutive_failures: int = 0
     total_failures: int = 0
-    status: str = "healthy"  # healthy | faulty | invalid
+    status: str = "healthy"  # healthy | faulty | invalid | rate_limited
     last_failed_timestamp: Optional[datetime] = None
     last_failed_reason: Optional[str] = None
+    # Daily request tracking
+    daily_requests: int = 0
+    last_request_date: Optional[str] = None  # Format: YYYY-MM-DD
+    daily_limit: int = 200  # Maximum requests per day
 
     def mark_failure(self, reason: str) -> str:
         """
@@ -76,12 +80,59 @@ class LicenseKeyHealth:
                 f"{self.consecutive_failures} consecutive failures"
             )
         self.consecutive_failures = 0
-        self.status = "healthy"
+        if self.status != "rate_limited":  # Don't override rate_limited status
+            self.status = "healthy"
+
+    def increment_daily_requests(self) -> bool:
+        """
+        Increment daily request counter and check if limit is reached.
+
+        Returns:
+            True if request is allowed (under limit), False if limit reached
+        """
+        today = datetime.now().strftime("%Y-%m-%d")
+
+        # Reset counter if it's a new day
+        if self.last_request_date != today:
+            self.daily_requests = 0
+            self.last_request_date = today
+            # Reset rate_limited status on new day
+            if self.status == "rate_limited":
+                self.status = "healthy"
+                logger.info(
+                    f"License key {self._mask_key()} daily limit reset "
+                    f"(new day: {today})"
+                )
+
+        # Check if limit reached
+        if self.daily_requests >= self.daily_limit:
+            if self.status != "rate_limited":
+                self.status = "rate_limited"
+                logger.warning(
+                    f"License key {self._mask_key()} reached daily limit "
+                    f"({self.daily_limit} requests)"
+                )
+            return False
+
+        # Increment counter
+        self.daily_requests += 1
+        logger.debug(
+            f"License key {self._mask_key()} daily requests: "
+            f"{self.daily_requests}/{self.daily_limit}"
+        )
+        return True
+
+    def get_remaining_requests(self) -> int:
+        """Get remaining requests for today."""
+        today = datetime.now().strftime("%Y-%m-%d")
+        if self.last_request_date != today:
+            return self.daily_limit
+        return max(0, self.daily_limit - self.daily_requests)
 
     @property
     def is_usable(self) -> bool:
         """Returns True if key can be used for API calls."""
-        return self.status in ["healthy", "faulty"]
+        return self.status in ["healthy", "faulty"]  # rate_limited keys not usable
 
     @property
     def is_permanently_disabled(self) -> bool:
@@ -127,45 +178,63 @@ class KeyRotationManager:
 
     def get_next_key(self) -> str:
         """
-        Get next usable license key.
+        Get next usable license key with daily request limit check.
 
         Prefers healthy keys over faulty, but will use faulty if no healthy keys remain.
-        As a last resort, will return an invalid key if all keys are invalid.
+        Checks daily request limit before returning key.
+        As a last resort, will return an invalid key if all keys are invalid or rate-limited.
 
         Returns:
             A license key (healthy, faulty, or invalid as last resort)
 
         Raises:
-            ByapiError: If no keys are configured at all
+            ByapiError: If no keys are configured or all keys are rate-limited
         """
-        from byapi_exceptions import ByapiError
+        from byapi_exceptions import ByapiError, RateLimitError
 
         if not self.keys:
             raise ByapiError("No license keys configured")
 
-        # First, try to find a healthy key
+        # First, try to find a healthy key that hasn't reached daily limit
         healthy_keys = [k for k in self._key_list if self.keys[k].status == "healthy"]
-        if healthy_keys:
-            # Round-robin through healthy keys
-            key = healthy_keys[self.current_index % len(healthy_keys)]
+        for _ in range(len(healthy_keys)):
+            key = healthy_keys[self.current_index % len(healthy_keys)] if healthy_keys else None
+            if key and self.keys[key].increment_daily_requests():
+                self.current_index = (self.current_index + 1) % len(self._key_list)
+                return key
+            # This key reached limit, move to next
             self.current_index = (self.current_index + 1) % len(self._key_list)
-            return key
 
-        # No healthy keys, try faulty (still usable)
+        # No healthy keys with remaining quota, try faulty keys
         faulty_keys = [k for k in self._key_list if self.keys[k].status == "faulty"]
-        if faulty_keys:
-            key = faulty_keys[self.current_index % len(faulty_keys)]
+        for _ in range(len(faulty_keys)):
+            key = faulty_keys[self.current_index % len(faulty_keys)] if faulty_keys else None
+            if key and self.keys[key].increment_daily_requests():
+                self.current_index = (self.current_index + 1) % len(self._key_list)
+                return key
             self.current_index = (self.current_index + 1) % len(self._key_list)
-            return key
 
-        # No healthy or faulty keys, return an invalid key as last resort
-        # This allows the caller to attempt the request and get proper error handling
+        # Check if all keys are rate-limited (daily limit reached)
+        rate_limited_keys = [k for k in self._key_list if self.keys[k].status == "rate_limited"]
+        if len(rate_limited_keys) == len(self._key_list):
+            # All keys hit daily limit
+            remaining_info = ", ".join([
+                f"{self.keys[k]._mask_key()}: {self.keys[k].get_remaining_requests()}"
+                for k in self._key_list
+            ])
+            raise RateLimitError(
+                f"All {len(self._key_list)} license keys have reached daily limit "
+                f"(200 requests/day). Remaining: {remaining_info}"
+            )
+
+        # No healthy or faulty keys with quota, try invalid keys as last resort
         invalid_keys = [k for k in self._key_list if self.keys[k].status == "invalid"]
         if invalid_keys:
             key = invalid_keys[self.current_index % len(invalid_keys)]
             self.current_index = (self.current_index + 1) % len(self._key_list)
             logger.warning(
-                f"All available keys are invalid. Returning {key[:8]}... as last resort."
+                f"All available keys are invalid or rate-limited. "
+                f"Returning {key[:8]}... as last resort."
             )
             return key
 
@@ -292,6 +361,11 @@ class ByapiConfig:
         # Initialize key rotation manager
         self.key_manager = KeyRotationManager(self.license_keys)
 
+        # 简单密钥轮换支持（用于装饰器）
+        self.licences = self.license_keys  # 密钥列表
+        self.current_key_index = 0  # 当前密钥索引
+        self.licence = self.licences[0] if self.licences else ""  # 当前使用的密钥
+
         logger.info(
             f"ByapiConfig initialized: "
             f"url={self.base_url}, "
@@ -314,6 +388,39 @@ class ByapiConfig:
             List of LicenseKeyHealth objects for each key
         """
         return self.key_manager.get_health_status(mask_keys=mask_keys)
+
+    def rotate_key(self) -> Optional[str]:
+        """
+        轮换到下一个许可证密钥（用于简单重试装饰器）
+
+        功能说明：
+        - 切换到下一个可用的许可证密钥
+        - 如果只有一个密钥，返回None
+        - 循环轮换（到最后一个后回到第一个）
+
+        返回：
+            下一个密钥，如果没有其他密钥则返回None
+
+        使用示例：
+            next_key = config.rotate_key()
+            if next_key:
+                print(f"切换到密钥: {next_key[:8]}...")
+        """
+        if len(self.licences) <= 1:
+            return None
+
+        self.current_key_index = (self.current_key_index + 1) % len(self.licences)
+        self.licence = self.licences[self.current_key_index]
+        return self.licence
+
+    def get_current_key(self) -> str:
+        """
+        获取当前使用的密钥
+
+        返回：
+            当前密钥字符串
+        """
+        return self.licence
 
     @staticmethod
     def get_config() -> "ByapiConfig":

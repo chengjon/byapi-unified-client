@@ -47,6 +47,18 @@ from byapi_models import (
     CompanyInfo,
     MarketIndex,
     RequestResult,
+    BalanceSheet,
+    IncomeStatement,
+    CashFlowStatement,
+)
+from byapi_decorators import (
+    retry_with_key_rotation,
+    validate_stock_code,
+    auto_find_nearest_date,
+)
+from byapi_availability_checker import (
+    AvailabilityChecker,
+    DataAvailabilityResult,
 )
 
 logger = logging.getLogger(__name__)
@@ -141,6 +153,14 @@ class BaseApiHandler:
                         status_code=response.status_code,
                     )
 
+                elif response.status_code >= 500:
+                    # Server error (5xx) - will retry
+                    last_error = ("server_error", f"HTTP {response.status_code}")
+                    attempt += 1
+                    if attempt < self.config.max_retries:
+                        self._wait_exponential(attempt)
+                    continue
+
                 elif response.status_code >= 400:
                     # Client error (4xx except above)
                     error_msg = f"HTTP {response.status_code}: Client error"
@@ -149,14 +169,6 @@ class BaseApiHandler:
                         f"API request failed: {error_msg}",
                         status_code=response.status_code,
                     )
-
-                elif response.status_code >= 500:
-                    # Server error (5xx) - will retry
-                    last_error = ("server_error", f"HTTP {response.status_code}")
-                    attempt += 1
-                    if attempt < self.config.max_retries:
-                        self._wait_exponential(attempt)
-                    continue
 
                 # Success (2xx)
                 response.raise_for_status()
@@ -199,8 +211,8 @@ class BaseApiHandler:
                 raise
 
             except Exception as e:
-                # Unknown error
-                logger.error(f"Unexpected error: {e}")
+                # Unknown error - log full stack trace for debugging
+                logger.exception(f"Unexpected error during API call: {e}")
                 raise ByapiError(
                     f"Unexpected error during API call: {e}",
                     cause=e,
@@ -892,6 +904,1521 @@ class CompanyInfoCategory:
             raise DataError(f"Failed to parse company info: {e}", cause=e)
 
 
+class StockListCategory:
+    """
+    股票列表数据获取类
+
+    Stock list data retrieval category.
+    Provides access to stock listings and new stock calendars.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize stock list category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_stock_list(self) -> List[Dict[str, str]]:
+        """
+        获取基础的股票代码和名称
+
+        Get basic stock codes and names for all listed stocks.
+        Used as reference for subsequent API calls requiring stock codes.
+
+        Returns:
+            List[Dict]: List of stock information dictionaries containing:
+                - dm (code): Stock code (6-digit)
+                - mc (name): Company name
+                - jys (exchange): Exchange (SH/SZ)
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> stocks = client.stock_list.get_stock_list()
+            >>> print(f"Total stocks: {len(stocks)}")
+            >>> for stock in stocks[:3]:
+            ...     print(f"{stock['dm']}: {stock['mc']}")
+        """
+        result = self.handler._make_request("hslt/list")
+
+        if not result.data:
+            return []
+
+        # API returns list directly
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_new_stock_calendar(self) -> List[Dict[str, Any]]:
+        """
+        获取新股日历，按申购日期倒序
+
+        Get new stock IPO calendar sorted by subscription date (newest first).
+
+        Returns:
+            List[Dict]: List of new stock information containing:
+                - Stock code, name
+                - Subscription date
+                - Listing date
+                - Issue price
+                - Other IPO details
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> new_stocks = client.stock_list.get_new_stock_calendar()
+            >>> for stock in new_stocks[:5]:
+            ...     print(f"New IPO: {stock}")
+        """
+        result = self.handler._make_request("hslt/new")
+
+        if not result.data:
+            return []
+
+        new_stocks = result.data if isinstance(result.data, list) else [result.data]
+        return new_stocks
+
+
+class IndexIndustryConceptCategory:
+    """
+    指数、行业、概念数据获取类
+
+    Index, industry, and concept classification category.
+    Provides access to market indices, industry classifications, and concept groups.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize index/industry/concept category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_index_industry_concept_tree(self) -> List[Dict[str, Any]]:
+        """
+        获取指数、行业、概念树（包括基金、债券、美股、外汇、期货、黄金等的代码）
+
+        Get index, industry, and concept classification tree.
+        Includes funds, bonds, US stocks, forex, futures, gold, etc.
+
+        Returns:
+            List[Dict]: Tree structure containing all classifications
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> tree = client.index_concept.get_index_industry_concept_tree()
+            >>> print(f"Classifications: {len(tree)}")
+        """
+        result = self.handler._make_request("hszg/list")
+
+        if not result.data:
+            return []
+
+        tree = result.data if isinstance(result.data, list) else [result.data]
+        return tree
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_stocks_by_index_industry_concept(self, code: str) -> List[Dict[str, Any]]:
+        """
+        根据"指数、行业、概念树"接口得到的代码作为参数，得到相关的股票
+
+        Get stocks belonging to a specific index/industry/concept.
+        Use codes from get_index_industry_concept_tree() as input.
+
+        Args:
+            code: Classification code from index/industry/concept tree
+
+        Returns:
+            List[Dict]: List of stocks in this classification
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> stocks = client.index_concept.get_stocks_by_index_industry_concept("BK0001")
+            >>> print(f"Stocks in this classification: {len(stocks)}")
+        """
+        result = self.handler._make_request(f"hszg/gg/{code}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_index_industry_concept_by_stock(self, code: str) -> List[Dict[str, Any]]:
+        """
+        根据股票代码获取相关的指数、行业、概念
+
+        Get index/industry/concept classifications for a specific stock.
+
+        Args:
+            code: Stock code (6-digit format)
+
+        Returns:
+            List[Dict]: List of classifications this stock belongs to
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> classifications = client.index_concept.get_index_industry_concept_by_stock("000001")
+            >>> print(f"Stock belongs to {len(classifications)} classifications")
+        """
+        # Remove market suffix if present
+        if '.' in code:
+            code = code.split('.')[0]
+
+        result = self.handler._make_request(f"hszg/zg/{code}")
+
+        if not result.data:
+            return []
+
+        classifications = result.data if isinstance(result.data, list) else [result.data]
+        return classifications
+
+
+class StockPoolsCategory:
+    """
+    股池数据获取类（涨停股池、跌停股池、强势股池、次新股池、炸板股池）
+
+    Stock pools category (limit up/down, strong stocks, newly listed, broken limits).
+    Provides access to pre-filtered stock pools for trading strategies.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize stock pools category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_limit_up_stocks(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取涨停股票列表，根据封板时间升序
+
+        Get limit-up stocks for a specific date, sorted by seal time (ascending).
+
+        Args:
+            date: Date in YYYY-MM-DD format. Defaults to today if None.
+
+        Returns:
+            List[Dict]: List of limit-up stocks with seal time and other info
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> limit_ups = client.stock_pools.get_limit_up_stocks("2025-01-20")
+            >>> print(f"Limit-up stocks: {len(limit_ups)}")
+        """
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hslt/ztgc/{date}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_limit_down_stocks(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取跌停股票列表，根据封单资金升序
+
+        Get limit-down stocks for a specific date, sorted by seal amount.
+
+        Args:
+            date: Date in YYYY-MM-DD format. Defaults to today if None.
+
+        Returns:
+            List[Dict]: List of limit-down stocks
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> limit_downs = client.stock_pools.get_limit_down_stocks()
+        """
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hslt/dtgc/{date}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_strong_stocks(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取强势股票列表，根据涨幅倒序
+
+        Get strong stocks for a specific date, sorted by price gain (descending).
+
+        Args:
+            date: Date in YYYY-MM-DD format. Defaults to today if None.
+
+        Returns:
+            List[Dict]: List of strong-performing stocks
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> strong = client.stock_pools.get_strong_stocks()
+        """
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hslt/qsgc/{date}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_new_stocks(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取次新股票列表，根据开板几日升序
+
+        Get newly listed stocks, sorted by days since first trading day.
+
+        Args:
+            date: Date in YYYY-MM-DD format. Defaults to today if None.
+
+        Returns:
+            List[Dict]: List of newly listed stocks
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> new_stocks = client.stock_pools.get_new_stocks()
+        """
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hslt/cxgc/{date}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_broken_limit_stocks(self, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取炸板股票列表，根据首次封板时间升序
+
+        Get stocks with broken limit-up seals, sorted by first seal time.
+
+        Args:
+            date: Date in YYYY-MM-DD format. Defaults to today if None.
+
+        Returns:
+            List[Dict]: List of broken-seal stocks
+
+        Raises:
+            DataError: If response parsing fails
+            NetworkError: If connection fails
+
+        Example:
+            >>> client = ByapiClient()
+            >>> broken = client.stock_pools.get_broken_limit_stocks()
+        """
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hslt/zbgc/{date}")
+
+        if not result.data:
+            return []
+
+        stocks = result.data if isinstance(result.data, list) else [result.data]
+        return stocks
+
+
+class CompanyDetailsCategory:
+    """
+    上市公司详情数据获取类
+
+    Company details category.
+    Provides detailed company information including executives, dividends,
+    shareholders, and financial indicators.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize company details category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    def _clean_stock_code(self, code: str) -> str:
+        """Remove market suffix from stock code if present."""
+        return code.split('.')[0] if '.' in code else code
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_company_profile(self, code: str) -> Dict[str, Any]:
+        """
+        获取公司简介
+
+        Get company profile/introduction.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Company profile information
+
+        Example:
+            >>> client = ByapiClient()
+            >>> profile = client.company_details.get_company_profile("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/gsjj/{code}")
+        return result.data if result.data else {}
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_index_membership(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取所属指数
+
+        Get indices that this stock belongs to.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: List of index memberships
+
+        Example:
+            >>> client = ByapiClient()
+            >>> indices = client.company_details.get_index_membership("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/sszs/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_executive_history(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取历届高管成员
+
+        Get historical executive members.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Executive history
+
+        Example:
+            >>> client = ByapiClient()
+            >>> executives = client.company_details.get_executive_history("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/ljgg/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_board_history(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取历届董事会成员
+
+        Get historical board of directors members.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Board member history
+
+        Example:
+            >>> client = ByapiClient()
+            >>> board = client.company_details.get_board_history("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/ljds/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_supervisory_history(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取历届监事会成员
+
+        Get historical supervisory board members.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Supervisory board history
+
+        Example:
+            >>> client = ByapiClient()
+            >>> supervisors = client.company_details.get_supervisory_history("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/ljjj/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_recent_dividends(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取近年分红
+
+        Get recent dividend history.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Dividend history
+
+        Example:
+            >>> client = ByapiClient()
+            >>> dividends = client.company_details.get_recent_dividends("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jnfh/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_recent_seo(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取近年增发
+
+        Get recent seasoned equity offerings (SEO).
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: SEO history
+
+        Example:
+            >>> client = ByapiClient()
+            >>> seos = client.company_details.get_recent_seo("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jnzf/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_lifted_shares(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取解禁限售
+
+        Get lifted share lock-up information.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Share lock-up lift schedule
+
+        Example:
+            >>> client = ByapiClient()
+            >>> lifted = client.company_details.get_lifted_shares("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jjxs/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_quarterly_profits(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取近一年各季度利润
+
+        Get quarterly profit data for the past year.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Quarterly profit data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> profits = client.company_details.get_quarterly_profits("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jdlr/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_quarterly_cashflow(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取近一年各季度现金流
+
+        Get quarterly cash flow data for the past year.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Quarterly cash flow data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> cashflow = client.company_details.get_quarterly_cashflow("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jdxj/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_earnings_forecast(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取近年业绩预告
+
+        Get earnings forecast announcements.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Earnings forecast data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> forecast = client.company_details.get_earnings_forecast("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/yjyg/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_financial_indicators(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取财务指标
+
+        Get financial indicators/metrics.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Financial indicator data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> indicators = client.company_details.get_financial_indicators("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/cwzb/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_top_shareholders(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取十大股东
+
+        Get top 10 shareholders.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Top 10 shareholders data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> shareholders = client.company_details.get_top_shareholders("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/sdgd/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_top_float_shareholders(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取十大流通股东
+
+        Get top 10 float shareholders.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Top 10 float shareholders data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> float_holders = client.company_details.get_top_float_shareholders("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/ltgd/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_shareholder_trend(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取股东变化趋势
+
+        Get shareholder trend/change history.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Shareholder trend data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> trend = client.company_details.get_shareholder_trend("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/gdbh/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_fund_ownership(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取基金持股
+
+        Get fund ownership/holdings.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Fund ownership data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> funds = client.company_details.get_fund_ownership("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hscp/jjcg/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+
+class RealtimeTradingCategory:
+    """
+    实时交易数据获取类
+
+    Real-time trading data category.
+    Provides access to real-time quotes, tick data, and order book information.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize real-time trading category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    def _clean_stock_code(self, code: str) -> str:
+        """Remove market suffix from stock code if present."""
+        return code.split('.')[0] if '.' in code else code
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_realtime_quotes_public(self, code: str) -> Dict[str, Any]:
+        """
+        获取实时交易公开数据（不需要授权）
+
+        Get real-time trading data (public, no authorization needed).
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Real-time trading data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> quotes = client.realtime.get_realtime_quotes_public("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsrt/qt1/{code}")
+        return result.data if result.data else {}
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_intraday_transactions(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取当天逐笔交易
+
+        Get intraday tick-by-tick transactions.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Intraday transaction list
+
+        Example:
+            >>> client = ByapiClient()
+            >>> transactions = client.realtime.get_intraday_transactions("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsrt/zbyt/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_realtime_quotes(self, code: str) -> Dict[str, Any]:
+        """
+        获取实时交易数据
+
+        Get real-time trading data (HTTPS endpoint).
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Real-time trading data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> quotes = client.realtime.get_realtime_quotes("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/real/time/{code}", use_https=True)
+        return result.data if result.data else {}
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_five_level_quotes(self, code: str) -> Dict[str, Any]:
+        """
+        获取买卖五档盘口
+
+        Get 5-level order book (bid/ask depth).
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: 5-level bid/ask data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> orderbook = client.realtime.get_five_level_quotes("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/real/five/{code}", use_https=True)
+        return result.data if result.data else {}
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_multi_stock_realtime(self, stock_codes: str) -> List[Dict[str, Any]]:
+        """
+        获取实时交易数据（多股）
+
+        Get real-time data for multiple stocks.
+
+        Args:
+            stock_codes: Comma-separated stock codes (e.g., "000001,600000,000002")
+
+        Returns:
+            List[Dict]: Real-time data for all requested stocks
+
+        Example:
+            >>> client = ByapiClient()
+            >>> quotes = client.realtime.get_multi_stock_realtime("000001,600000")
+        """
+        result = self.handler._make_request(f"hsrl/ssjy_more", params={"stock_codes": stock_codes})
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_fund_flow_data(self, code: str) -> Dict[str, Any]:
+        """
+        获取资金流向数据
+
+        Get fund flow data.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Fund flow information
+
+        Example:
+            >>> client = ByapiClient()
+            >>> flow = client.realtime.get_fund_flow_data("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/fund/flow/{code}", use_https=True)
+        return result.data if result.data else {}
+
+
+class MarketDataCategory:
+    """
+    行情数据获取类
+
+    Market data category.
+    Provides access to minute-level quotes, historical limit prices, and market indicators.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize market data category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    def _clean_stock_code(self, code: str) -> str:
+        """Remove market suffix from stock code if present."""
+        return code.split('.')[0] if '.' in code else code
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_latest_minute_quotes(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取最新分时交易
+
+        Get latest minute-level quotes (intraday).
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Minute-level quote data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> minute_data = client.market_data.get_latest_minute_quotes("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hshq/fxt/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_history_minute_quotes(self, code: str, date: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        获取历史分时交易
+
+        Get historical minute-level quotes for a specific date.
+
+        Args:
+            code: Stock code (6-digit)
+            date: Date in YYYY-MM-DD format. Defaults to today.
+
+        Returns:
+            List[Dict]: Historical minute-level data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> hist_minute = client.market_data.get_history_minute_quotes("000001", "2025-01-20")
+        """
+        code = self._clean_stock_code(code)
+        if not date:
+            from datetime import datetime
+            date = datetime.now().strftime("%Y-%m-%d")
+
+        result = self.handler._make_request(f"hshq/lxt/{code}/{date}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_history_limit_prices(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取历史涨跌停价格
+
+        Get historical limit-up/limit-down prices.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Historical limit price data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> limits = client.market_data.get_history_limit_prices("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hshq/ztj/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_market_indicators(self, code: str) -> Dict[str, Any]:
+        """
+        获取行情指标
+
+        Get market indicators/metrics.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Market indicator data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> indicators = client.market_data.get_market_indicators("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hshq/hqzb/{code}")
+        return result.data if result.data else {}
+
+
+class BasicInfoCategory:
+    """
+    基础信息数据获取类
+
+    Basic information category.
+    Provides access to fundamental stock information.
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize basic info category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    def _clean_stock_code(self, code: str) -> str:
+        """Remove market suffix from stock code if present."""
+        return code.split('.')[0] if '.' in code else code
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_stock_basic_info(self, code: str) -> Dict[str, Any]:
+        """
+        获取股票基础信息
+
+        Get stock basic information.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            Dict: Stock basic information
+
+        Example:
+            >>> client = ByapiClient()
+            >>> info = client.basic_info.get_stock_basic_info("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsjc/gsjj/{code}")
+        return result.data if result.data else {}
+
+
+class FinancialStatementsCategory:
+    """
+    财务报表数据获取类
+
+    Financial statements category.
+    Provides detailed financial statement data (balance sheet, income, cash flow, etc.).
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize financial statements category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    def _clean_stock_code(self, code: str) -> str:
+        """Remove market suffix from stock code if present."""
+        return code.split('.')[0] if '.' in code else code
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_balance_sheet(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取资产负债表
+
+        Get balance sheet.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Balance sheet data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> balance = client.financial_statements.get_balance_sheet("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/balance/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_income_statement(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取利润表
+
+        Get income statement.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Income statement data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> income = client.financial_statements.get_income_statement("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/income/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_cash_flow_statement(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取现金流量表
+
+        Get cash flow statement.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Cash flow statement data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> cashflow = client.financial_statements.get_cash_flow_statement("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/cashflow/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_financial_ratios(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取财务主要指标
+
+        Get financial ratios/key metrics.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Financial ratio data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> ratios = client.financial_statements.get_financial_ratios("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/pershareindex/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_capital_structure(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取公司股本表
+
+        Get capital structure/share capital table.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Capital structure data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> capital = client.financial_statements.get_capital_structure("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/capital/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_company_top_shareholders(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取公司十大股东
+
+        Get company top 10 shareholders.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Top shareholders data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> top10 = client.financial_statements.get_company_top_shareholders("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/topholder/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_company_top_float_holders(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取公司十大流通股东
+
+        Get company top 10 float shareholders.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Top float shareholders data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> top_float = client.financial_statements.get_company_top_float_holders("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/flowholder/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    @validate_stock_code
+    def get_shareholder_count(self, code: str) -> List[Dict[str, Any]]:
+        """
+        获取公司股东数
+
+        Get shareholder count history.
+
+        Args:
+            code: Stock code (6-digit)
+
+        Returns:
+            List[Dict]: Shareholder count data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> count = client.financial_statements.get_shareholder_count("000001")
+        """
+        code = self._clean_stock_code(code)
+        result = self.handler._make_request(f"hsstock/financial/hm/{code}")
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+
+class TechnicalIndicatorsCategory:
+    """
+    技术指标数据获取类
+
+    Technical indicators category.
+    Provides historical technical indicator data (MACD, MA, BOLL, KDJ).
+    """
+
+    def __init__(self, handler: BaseApiHandler):
+        """
+        Initialize technical indicators category.
+
+        Args:
+            handler: BaseApiHandler instance for API requests
+        """
+        self.handler = handler
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_history_macd(
+        self,
+        code: str,
+        level: str = "d",
+        adj_type: str = "n",
+        start_time: str = "",
+        end_time: str = "",
+        limit: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        获取历史分时MACD数据
+
+        Get historical MACD indicator data.
+
+        Args:
+            code: Stock code with market suffix (e.g., "000001.SZ")
+            level: Time level - 5/15/30/60/d/w/m/y
+            adj_type: Adjustment type - n/f/b/fr/br (only n for minute-level)
+            start_time: Start time (YYYYMMDD or YYYYMMDDhhmmss)
+            end_time: End time (YYYYMMDD or YYYYMMDDhhmmss)
+            limit: Limit number of records (0 = all)
+
+        Returns:
+            List[Dict]: Historical MACD data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> macd = client.technical_indicators.get_history_macd("000001.SZ", "d", "n", limit=100)
+        """
+        url = f"hsstock/history/macd/{code}/{level}/{adj_type}"
+        params = {}
+        if start_time:
+            params["st"] = start_time
+        if end_time:
+            params["et"] = end_time
+        if limit > 0:
+            params["lt"] = limit
+
+        result = self.handler._make_request(url, params=params if params else None)
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_history_ma(
+        self,
+        code: str,
+        level: str = "d",
+        adj_type: str = "n",
+        start_time: str = "",
+        end_time: str = "",
+        limit: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        获取历史分时MA数据
+
+        Get historical moving average (MA) data.
+
+        Args:
+            code: Stock code with market suffix (e.g., "000001.SZ")
+            level: Time level - 5/15/30/60/d/w/m/y
+            adj_type: Adjustment type - n/f/b/fr/br
+            start_time: Start time (YYYYMMDD or YYYYMMDDhhmmss)
+            end_time: End time (YYYYMMDD or YYYYMMDDhhmmss)
+            limit: Limit number of records (0 = all)
+
+        Returns:
+            List[Dict]: Historical MA data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> ma = client.technical_indicators.get_history_ma("000001.SZ", "d", limit=100)
+        """
+        url = f"hsstock/history/ma/{code}/{level}/{adj_type}"
+        params = {}
+        if start_time:
+            params["st"] = start_time
+        if end_time:
+            params["et"] = end_time
+        if limit > 0:
+            params["lt"] = limit
+
+        result = self.handler._make_request(url, params=params if params else None)
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_history_boll(
+        self,
+        code: str,
+        level: str = "d",
+        adj_type: str = "n",
+        start_time: str = "",
+        end_time: str = "",
+        limit: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        获取历史分时BOLL数据
+
+        Get historical Bollinger Bands (BOLL) data.
+
+        Args:
+            code: Stock code with market suffix (e.g., "000001.SZ")
+            level: Time level - 5/15/30/60/d/w/m/y
+            adj_type: Adjustment type - n/f/b/fr/br
+            start_time: Start time (YYYYMMDD or YYYYMMDDhhmmss)
+            end_time: End time (YYYYMMDD or YYYYMMDDhhmmss)
+            limit: Limit number of records (0 = all)
+
+        Returns:
+            List[Dict]: Historical BOLL data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> boll = client.technical_indicators.get_history_boll("000001.SZ", "d", limit=100)
+        """
+        url = f"hsstock/history/boll/{code}/{level}/{adj_type}"
+        params = {}
+        if start_time:
+            params["st"] = start_time
+        if end_time:
+            params["et"] = end_time
+        if limit > 0:
+            params["lt"] = limit
+
+        result = self.handler._make_request(url, params=params if params else None)
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+    @retry_with_key_rotation(max_retries=1)
+    def get_history_kdj(
+        self,
+        code: str,
+        level: str = "d",
+        adj_type: str = "n",
+        start_time: str = "",
+        end_time: str = "",
+        limit: int = 0
+    ) -> List[Dict[str, Any]]:
+        """
+        获取历史分时KDJ数据
+
+        Get historical KDJ indicator data.
+
+        Args:
+            code: Stock code with market suffix (e.g., "000001.SZ")
+            level: Time level - 5/15/30/60/d/w/m/y
+            adj_type: Adjustment type - n/f/b/fr/br
+            start_time: Start time (YYYYMMDD or YYYYMMDDhhmmss)
+            end_time: End time (YYYYMMDD or YYYYMMDDhhmmss)
+            limit: Limit number of records (0 = all)
+
+        Returns:
+            List[Dict]: Historical KDJ data
+
+        Example:
+            >>> client = ByapiClient()
+            >>> kdj = client.technical_indicators.get_history_kdj("000001.SZ", "d", limit=100)
+        """
+        url = f"hsstock/history/kdj/{code}/{level}/{adj_type}"
+        params = {}
+        if start_time:
+            params["st"] = start_time
+        if end_time:
+            params["et"] = end_time
+        if limit > 0:
+            params["lt"] = limit
+
+        result = self.handler._make_request(url, params=params if params else None)
+        if not result.data:
+            return []
+        return result.data if isinstance(result.data, list) else [result.data]
+
+
 class ByapiClient:
     """
     Unified Byapi Stock API Client - Main entry point.
@@ -937,11 +2464,37 @@ class ByapiClient:
         announcements = client.announcements.get_announcements("000001")
 
     **Categories** (accessed as properties):
-        client.stock_prices: Real-time and historical price data
-        client.indicators: Technical indicators and analysis
-        client.financials: Balance sheets, income, cash flow statements
-        client.announcements: Company news and announcements
-        client.company_info: Company profile and classification
+        Core Market Data:
+        - client.stock_prices: Real-time and historical price data
+        - client.indicators: Technical indicators and analysis
+        - client.financials: Balance sheets, income, cash flow statements
+        - client.announcements: Company news and announcements
+        - client.company_info: Company profile and classification
+
+        Stock Lists and Classifications:
+        - client.stock_list: Stock listings and new IPO calendars
+        - client.index_concept: Index, industry, and concept classifications
+
+        Stock Pools:
+        - client.stock_pools: Limit up/down, strong stocks, newly listed, broken limits
+
+        Company Details:
+        - client.company_details: Executives, dividends, shareholders, financial indicators
+
+        Real-time Trading:
+        - client.realtime: Real-time quotes, tick data, order book
+
+        Market Data:
+        - client.market_data: Minute-level quotes, historical limit prices
+
+        Basic Information:
+        - client.basic_info: Fundamental stock information
+
+        Financial Statements:
+        - client.financial_statements: Detailed balance sheet, income, cash flow, ratios
+
+        Technical Indicators:
+        - client.technical_indicators: Historical MACD, MA, BOLL, KDJ
 
     **Error Handling**:
         from byapi_exceptions import (
@@ -1012,11 +2565,40 @@ class ByapiClient:
         self.handler = BaseApiHandler(self.config)
 
         # Initialize data categories
+        # Core market data categories
         self.stock_prices = StockPricesCategory(self.handler)
         self.indicators = IndicatorsCategory(self.handler)
         self.financials = FinancialsCategory(self.handler)
         self.announcements = AnnouncementsCategory(self.handler)
         self.company_info = CompanyInfoCategory(self.handler)
+
+        # Stock list and classification categories
+        self.stock_list = StockListCategory(self.handler)
+        self.index_concept = IndexIndustryConceptCategory(self.handler)
+
+        # Stock pools category
+        self.stock_pools = StockPoolsCategory(self.handler)
+
+        # Company details category
+        self.company_details = CompanyDetailsCategory(self.handler)
+
+        # Real-time trading category
+        self.realtime = RealtimeTradingCategory(self.handler)
+
+        # Market data category
+        self.market_data = MarketDataCategory(self.handler)
+
+        # Basic info category
+        self.basic_info = BasicInfoCategory(self.handler)
+
+        # Financial statements category
+        self.financial_statements = FinancialStatementsCategory(self.handler)
+
+        # Technical indicators category
+        self.technical_indicators = TechnicalIndicatorsCategory(self.handler)
+
+        # Initialize data availability checker
+        self.availability_checker = AvailabilityChecker(self)
 
         logger.info(f"ByapiClient initialized (v{__version__}) with {len(self.config.license_keys)} key(s)")
 
@@ -1058,6 +2640,75 @@ class ByapiClient:
             ...     print("Consider refreshing your .env file or restarting the application")
         """
         return self.config.get_license_health()
+
+    def check_data_availability(
+        self,
+        code: str,
+        quick: bool = False
+    ) -> DataAvailabilityResult:
+        """
+        检查股票数据可用性
+
+        功能说明：
+        - 在实际获取数据前，检查该股票在API中的数据可用性
+        - 返回详细的可用性报告，包括各类数据是否可用
+        - 可以避免无效的API调用，节省请求配额
+
+        参数：
+            code (str): 股票代码，6位数字（如'000001'、'601103'）
+            quick (bool): 是否快速检查（仅检查核心数据，默认False）
+                         True: 仅检查股票列表、公司信息、财务数据
+                         False: 额外检查股价、指标、公告（耗时更长）
+
+        返回：
+            DataAvailabilityResult: 可用性检查结果，包含：
+                - code: 股票代码
+                - name: 股票名称
+                - market: 市场（SH=上海/SZ=深圳）
+                - stock_list_available: 是否在股票列表中
+                - company_info_available: 公司信息是否可用
+                - financials_available: 财务数据是否可用
+                - stock_prices_available: 股价数据是否可用（quick=False时）
+                - indicators_available: 技术指标是否可用（quick=False时）
+                - announcements_available: 公告数据是否可用（quick=False时）
+                - error_message: 错误信息（如有）
+                - warnings: 警告列表
+                - financials_date_range: 财务数据日期范围
+                - financials_record_count: 财务数据记录数
+
+        使用示例：
+            >>> client = ByapiClient()
+            >>>
+            >>> # 检查601103的数据可用性
+            >>> result = client.check_data_availability("601103")
+            >>> print(f"股票名称: {result.name}")
+            >>> print(f"公司信息可用: {result.company_info_available}")
+            >>> print(f"财务数据可用: {result.financials_available}")
+            >>>
+            >>> if not result.financials_available:
+            >>>     print("❌ 该股票无财务数据，建议使用其他股票")
+            >>>     if result.warnings:
+            >>>         for warning in result.warnings:
+            >>>             print(f"⚠️  {warning}")
+            >>>
+            >>> # 快速检查多只股票
+            >>> for code in ["601103", "600519", "000001"]:
+            >>>     result = client.check_data_availability(code, quick=True)
+            >>>     status = '✅' if result.financials_available else '❌'
+            >>>     print(f"{status} {code}: 财务数据 ({result.financials_record_count}条)")
+
+        注意事项：
+            - quick=True 时仅检查核心数据（推荐批量检查时使用）
+            - quick=False 时会额外检查股价、指标、公告（耗时约2-3秒）
+            - 建议在批量操作前先进行快速检查
+            - 检查结果可调用 .to_dict() 转换为字典格式
+
+        数据可用性说明：
+            - 上海股票（6开头）：部分不支持公司信息接口
+            - 某些股票：可能缺少财务数据（如601103紫金矿业）
+            - 推荐备选：600519（贵州茅台）、000001（平安银行）
+        """
+        return self.availability_checker.check(code, quick=quick)
 
     def __repr__(self) -> str:
         """Return string representation of client."""
